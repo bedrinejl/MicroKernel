@@ -7,7 +7,9 @@ LIBS:=-lgcc
 
 OBJS:=\
 boot.o \
-kernel.o \
+kmain.o \
+vga.o \
+mylib.o
 
 all: myos.bin
 
