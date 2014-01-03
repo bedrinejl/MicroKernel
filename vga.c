@@ -54,20 +54,45 @@ void terminal_put_vgaentry_at(char c, vga_color color, size_t x, size_t y)
 
 void terminal_putchar(char c)
 {
-  terminal_put_vgaentry_at(c, terminal_color, terminal_column, terminal_row);
-  if (++terminal_column == VGA_WIDTH)
+  terminal_putchar_with_color(c, terminal_color);
+}
+
+void terminal_putchar_with_color(char c, vga_color color)
+{
+  if (c == '\n')
+    {
+      terminal_row++;
+      terminal_column = 0;
+    }
+  else
+    {
+      terminal_put_vgaentry_at(c, color, terminal_column, terminal_row);
+      terminal_column++;
+    }
+
+  if (terminal_column == VGA_WIDTH)
     {
       terminal_column = 0;
-      if (++terminal_row == VGA_HEIGHT)
-        {
-          terminal_row = 0;
-        }
+      terminal_row++;
     }
+
+  if (terminal_row == VGA_HEIGHT)
+    terminal_row = 0; 
+}
+
+void terminal_putstr_with_color(const char* data, vga_color color)
+{
+  size_t datalen = strlen(data);
+  for (size_t i = 0; i < datalen; i++)
+    terminal_putchar_with_color(data[i], color);
 }
 
 void terminal_putstr(const char* data)
 {
-  size_t datalen = strlen(data);
-  for (size_t i = 0; i < datalen; i++)
-    terminal_putchar(data[i]);
+  terminal_putstr_with_color(data, terminal_color);
+}
+
+void printk(int color, char *str) {
+  //TODO call printf of mylib
+  terminal_putstr_with_color(str, color);
 }

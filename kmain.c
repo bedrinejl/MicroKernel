@@ -4,5 +4,9 @@
 void kmain()
 {
   terminal_initialize();
-  terminal_putstr("Hello, kernel World\n");
+  printk(2,"Mikro\n");
+  printk(3,"     is\n");
+  printk(4,"       the\n");
+  printk(5,"          best\n");
+  printk(6,"              kernel\n");
 }

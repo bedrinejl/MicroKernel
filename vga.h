@@ -3,6 +3,7 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include "mylib.h"
 
 #define VGA_BUFFER_MODE 0xB8000;
 
@@ -39,6 +40,9 @@ void     terminal_initialize_with_color(vga_color fg, vga_color bg);
 void     terminal_setcolor(vga_color fg, vga_color bg);
 void     terminal_put_vgaentry_at(char c, vga_color color, size_t x, size_t y);
 void     terminal_putchar(char c);
+void     terminal_putchar_with_color(char c, vga_color color);
 void     terminal_putstr(const char *str);
+void     terminal_putstr_with_color(const char *str, vga_color color);
+void     printk(int color, char *str);
 
 #endif
