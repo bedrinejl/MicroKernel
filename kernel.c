@@ -51,7 +51,7 @@ void terminal_initialize()
 {
   terminal_row = 0;
   terminal_column = 0;
-  terminal_color = make_color(COLOR_LIGHT_GREEN, COLOR_MAGENTA);
+  terminal_color = make_color(COLOR_LIGHT_GREEN, COLOR_BLACK);
   terminal_buffer = (uint16_t*) 0xB8000;
   for ( size_t y = 0; y < VGA_HEIGHT; y++ )
     for ( size_t x = 0; x < VGA_WIDTH; x++ )
