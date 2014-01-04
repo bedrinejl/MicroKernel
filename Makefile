@@ -43,4 +43,4 @@ myos.iso: isodir/boot/myos.bin isodir/boot/grub/grub.cfg
 	grub-mkrescue -o $@ isodir
 
 run-qemu: myos.iso
-	qemu-system-i386 -cdrom myos.iso
+	qemu-system-i386 -cdrom myos.iso -monitor vc
