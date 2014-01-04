@@ -1,0 +1,34 @@
+BITS 32
+
+GLOBAL _start
+EXTERN kmain
+
+    MULTIBOOT_PAGE_ALIGN    equ 1
+    MULTIBOOT_MEMORY_INFO   equ 2
+    MULTIBOOT_AOUT_KLUDGE   equ 10000h
+    MULTIBOOT_HEADER_MAGIC  equ 1BADB002h
+    MULTIBOOT_HEADER_FLAGS  equ MULTIBOOT_PAGE_ALIGN | MULTIBOOT_MEMORY_INFO
+    MULTIBOOT_CHECKSUM	    equ -(MULTIBOOT_HEADER_MAGIC + MULTIBOOT_HEADER_FLAGS)
+	
+SECTION .bss
+    resb 8192
+_stack:
+
+SECTION .text
+
+_start:
+	mov	esp, _stack
+	jmp	_entry
+	
+ALIGN 4
+_multiboot_header:
+	dd	MULTIBOOT_HEADER_MAGIC
+	dd	MULTIBOOT_HEADER_FLAGS
+	dd	MULTIBOOT_CHECKSUM
+
+_entry:
+	call	kmain
+	cli
+_loop:	
+	hlt
+	jmp	_loop
