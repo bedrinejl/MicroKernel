@@ -1,4 +1,4 @@
-AS:=i586-elf-as
+AS:=nasm
 CC:=i586-elf-gcc
 
 CFLAGS:=-ffreestanding -O2 -Wall -Wextra -nostdlib -nostartfiles -nodefaultlibs
@@ -6,10 +6,10 @@ CPPFLAGS:=
 LIBS:=-lgcc
 
 OBJS:=\
-boot.o \
-kmain.o \
-vga.o \
-mylib.o
+./src/kernel.o \
+./src/kmain.o \
+./src/vga.o \
+./src/mylib.o
 
 all: myos.bin
 
@@ -19,10 +19,10 @@ myos.bin: $(OBJS) linker.ld
 	$(CC) -T linker.ld -o $@ $(CFLAGS) $(OBJS) $(LIBS)
 
 %.o: %.c
-	$(CC) -c $< -o $@ -std=gnu99 $(CFLAGS) $(CPPFLAGS)
+	$(CC) -c $< -o $@ -I ./include -std=gnu99 $(CFLAGS) $(CPPFLAGS)
 
-%.o: %.s
-	$(AS) $< -o $@
+%.o: %.asm
+	$(AS) -f elf $< -o $@
 
 clean:
 	rm -rf isodir
