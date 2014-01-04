@@ -43,7 +43,7 @@ void terminal_initialize_with_color(vga_color fg, vga_color bg)
   terminal_row = 0;
   terminal_column = 0;
   terminal_setcolor(fg, bg);
-  //terminal_clear_buffer();
+  terminal_clear_buffer();
 }
 
 void terminal_put_vgaentry_at(char c, vga_color color, size_t x, size_t y)
