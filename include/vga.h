@@ -3,7 +3,7 @@
 
 #include <stddef.h>
 #include <stdint.h>
-#include "mylib.h"
+#include "libc.h"
 
 #define VGA_BUFFER_MODE 0xB8000;
 

@@ -8,8 +8,9 @@ LIBS:=-lgcc
 OBJS:=\
 ./src/kernel.o \
 ./src/kmain.o \
+./src/gdt.o	\
 ./src/vga.o \
-./src/mylib.o
+./src/libc.o
 
 all: myos.bin
 
