@@ -31,6 +31,18 @@ static const size_t VGA_WIDTH = 80;
 static const size_t VGA_HEIGHT = 25;
 static const vga_color fg_default_color = COLOR_LIGHT_GREEN;
 static const vga_color bg_default_color = COLOR_BLACK;
+static const uint16_t *vga_buffer_pointer = VGA_BUFFER_MODE;
+
+typedef struct s_console
+{
+  size_t terminal_row;
+  size_t terminal_column;
+  uint8_t terminal_color;
+  uint16_t* terminal_buffer;
+  
+  } vga_terminal;
+
+int *get_terminal_instance();
 
 uint8_t  make_color(uint8_t fg, uint8_t bg);
 uint16_t make_vgaentry(char c, uint8_t color);
