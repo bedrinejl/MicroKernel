@@ -1,9 +1,11 @@
 #include "vga.h"
 
-size_t terminal_row;
-size_t terminal_column;
-uint8_t terminal_color;
-uint16_t* terminal_buffer;
+vga_terminal *get_terminal_instance()
+{
+  static vga_terminal vga;
+
+  return &vga;
+}
 
 uint8_t make_color(uint8_t fg, uint8_t bg)
 {
@@ -17,82 +19,93 @@ uint16_t make_vgaentry(char c, uint8_t color)
   return c16 | color16 << 8;
 }
 
-void terminal_setcolor(vga_color fg, vga_color bg)
+void terminal_setcolor(vga_terminal *pterm, vga_color fg, vga_color bg)
 {
-  terminal_color = make_color(fg, bg);
+  pterm->terminal_color = make_color(fg, bg);
 }
 
-void terminal_initialize()
+void terminal_initialize(vga_terminal *pterm)
 {
-  terminal_initialize_with_color(fg_default_color, bg_default_color);
+  terminal_initialize_with_color(pterm, fg_default_color, bg_default_color);
 }
 
-void terminal_clear_buffer()
+void terminal_clear_buffer(vga_terminal *pterm)
 {
-  terminal_buffer = (uint16_t*) VGA_BUFFER_MODE;
-  for(size_t y = 0; y < VGA_HEIGHT; y++)
-    for(size_t x = 0; x < VGA_WIDTH; x++)
-      {
-        const size_t index = y * VGA_WIDTH + x;
-        terminal_buffer[index] = make_vgaentry(' ', terminal_color);
-      }
+  uint32_t idx;
+  uint16_t c;
+
+  c = make_vgaentry(' ', 0);
+  idx = (VGA_HEIGHT * VGA_WIDTH) - 1;
+  while (idx--)
+    {
+      pterm->terminal_buffer[idx] = c;
+    }
 }
 
-void terminal_initialize_with_color(vga_color fg, vga_color bg)
+void terminal_initialize_with_color(vga_terminal *pterm, vga_color fg, vga_color bg)
 {
-  terminal_row = 0;
-  terminal_column = 0;
-  terminal_setcolor(fg, bg);
-  terminal_clear_buffer();
+  pterm->terminal_buffer = (uint16_t*) VGA_BUFFER_MODE;
+  pterm->terminal_row = 0;
+  pterm->terminal_column = 0;
+  terminal_setcolor(pterm, fg, bg);
+  terminal_clear_buffer(pterm);
 }
 
-void terminal_put_vgaentry_at(char c, vga_color color, size_t x, size_t y)
+void terminal_put_vgaentry_at(vga_terminal *pterm, char c, vga_color color, size_t x, size_t y)
 {
   const size_t index = y * VGA_WIDTH + x;
-  terminal_buffer[index] = make_vgaentry(c, color);
+  pterm->terminal_buffer[index] = make_vgaentry(c, color);
 }
 
-void terminal_putchar(char c)
+void terminal_putchar(vga_terminal *pterm, char c)
 {
-  terminal_putchar_with_color(c, terminal_color);
+  terminal_putchar_with_color(pterm, c);
 }
 
-void terminal_putchar_with_color(char c, vga_color color)
+void terminal_putchar_with_color(vga_terminal *pterm, char c)
 {
   if (c == '\n')
     {
-      terminal_row++;
-      terminal_column = 0;
+      pterm->terminal_row++;
+      pterm->terminal_column = 0;
     }
   else
     {
-      terminal_put_vgaentry_at(c, color, terminal_column, terminal_row);
-      terminal_column++;
+      terminal_put_vgaentry_at(pterm, c, pterm->terminal_color, pterm->terminal_column, pterm->terminal_row);
+      pterm->terminal_column++;
     }
 
-  if (terminal_column == VGA_WIDTH)
+  if (pterm->terminal_column == VGA_WIDTH)
     {
-      terminal_column = 0;
-      terminal_row++;
+      pterm->terminal_column = 0;
+      pterm->terminal_row++;
     }
 
-  if (terminal_row == VGA_HEIGHT)
-    terminal_row = 0; 
+  if (pterm->terminal_row == VGA_HEIGHT)
+    {
+      // memcpy(pterm->terminal_buffer, pterm->terminal_buffer + VGA_WIDTH, (VGA_WIDTH * (VGA_HEIGHT-1)));
+      pterm->terminal_row = 0;
+    }
 }
 
-void terminal_putstr_with_color(const char* data, vga_color color)
+void terminal_putstr_with_color(vga_terminal *pterm, const char* data)
 {
   size_t datalen = strlen(data);
   for (size_t i = 0; i < datalen; i++)
-    terminal_putchar_with_color(data[i], color);
+    terminal_putchar_with_color(pterm, data[i]);
 }
 
-void terminal_putstr(const char* data)
+void terminal_putstr(vga_terminal *pterm, const char* data)
 {
-  terminal_putstr_with_color(data, terminal_color);
+  terminal_putstr_with_color(pterm, data);
 }
 
 void printk(int color, char *str) {
+  vga_terminal *pterm = get_terminal_instance();
+  int lastColor = pterm->terminal_color;
+
+  pterm->terminal_color = color;
   //TODO call printf of mylib
-  terminal_putstr_with_color(str, color);
+  terminal_putstr_with_color(pterm, str);
+  pterm->terminal_color = lastColor;
 }

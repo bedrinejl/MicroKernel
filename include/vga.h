@@ -31,7 +31,6 @@ static const size_t VGA_WIDTH = 80;
 static const size_t VGA_HEIGHT = 25;
 static const vga_color fg_default_color = COLOR_LIGHT_GREEN;
 static const vga_color bg_default_color = COLOR_BLACK;
-static const uint16_t *vga_buffer_pointer = VGA_BUFFER_MODE;
 
 typedef struct s_console
 {
@@ -39,22 +38,21 @@ typedef struct s_console
   size_t terminal_column;
   uint8_t terminal_color;
   uint16_t* terminal_buffer;
-  
-  } vga_terminal;
+} vga_terminal;
 
-int *get_terminal_instance();
+vga_terminal *get_terminal_instance();
 
 uint8_t  make_color(uint8_t fg, uint8_t bg);
 uint16_t make_vgaentry(char c, uint8_t color);
-void     terminal_clear_buffer();
-void     terminal_initialize();
-void     terminal_initialize_with_color(vga_color fg, vga_color bg);
-void     terminal_setcolor(vga_color fg, vga_color bg);
-void     terminal_put_vgaentry_at(char c, vga_color color, size_t x, size_t y);
-void     terminal_putchar(char c);
-void     terminal_putchar_with_color(char c, vga_color color);
-void     terminal_putstr(const char *str);
-void     terminal_putstr_with_color(const char *str, vga_color color);
+void     terminal_clear_buffer(vga_terminal *pterm);
+void     terminal_initialize(vga_terminal *pterm);
+void     terminal_initialize_with_color(vga_terminal *pterm, vga_color fg, vga_color bg);
+void     terminal_setcolor(vga_terminal *pterm, vga_color fg, vga_color bg);
+void     terminal_put_vgaentry_at(vga_terminal *pterm, char c, vga_color color, size_t x, size_t y);
+void     terminal_putchar(vga_terminal *pterm, char c);
+void     terminal_putchar_with_color(vga_terminal *pterm, char c);
+void     terminal_putstr(vga_terminal *pterm, const char *str);
+void     terminal_putstr_with_color(vga_terminal *pterm, const char *str);
 void     printk(int color, char *str);
 
 #endif
