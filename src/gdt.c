@@ -1,5 +1,5 @@
 #include "gdt.h"
-#include "vga.h"
+#include "stdlib.h"
 
 extern void FASTCALL gdtFlush(t_gdtdesc *pdesc);
 
