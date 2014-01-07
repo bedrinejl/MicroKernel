@@ -1,5 +1,6 @@
 #include "gdt.h"
 #include "vga.h"
+#include "stdlib.h"
 
 extern void	gdtFlush(t_gdtdesc *pdesc);
 

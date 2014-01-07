@@ -1,6 +1,6 @@
 #include "vga.h"
 #include "gdt.h"
-#include "libc.h"
+#include "stdlib.h"
 
 void kmain()
 {
@@ -9,9 +9,16 @@ void kmain()
 
   gdtInitialize();
 
-  printk(2,"Mikro\n");
+  /*  printk(2,"Mikro\n");
   printk(3,"     is\n");
   printk(4,"       the\n");
   printk(5,"          best\n");
-  printk(6,"              kernel\n");
+  printk(6,"              kernel\n");*/
+
+  char t1[] = "salut";
+  char t2[] = "ca marche";
+
+  printf("%X, %i\n", t1, t2);
+
+
 }
