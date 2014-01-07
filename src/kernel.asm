@@ -26,7 +26,8 @@ multiboot_header:
 
 _start:
     cmp		eax, MULTIBOOT_BOOTLOADER_MAGIC
-    je		.multibootOK
+	je 	.next
+    je		.multibootOK	
     mov		edi, 0B8000h
     mov		esi, szNoMultiboot
     mov		ecx, 13

@@ -7,8 +7,8 @@ void setBackground(vga_terminal *pterm)
   uint32_t idx;
   uint16_t c;
   
-  pterm->terminal_color = make_color(COLOR_WHITE, COLOR_BLUE);
-  c = make_vgaentry(' ', make_color(COLOR_BLUE, COLOR_BLUE));
+  pterm->terminal_color = MAKE_COLOR(COLOR_WHITE, COLOR_BLUE);
+  c = MAKE_VGAENTRY(' ', MAKE_COLOR(COLOR_BLUE, COLOR_BLUE));
   idx = (VGA_HEIGHT * VGA_WIDTH);
   while (idx--)
     {
@@ -16,15 +16,19 @@ void setBackground(vga_terminal *pterm)
     }
 }
 
-void printTitle(vga_terminal *pterm, char *str)
+void printTitle(vga_terminal *pterm)
 {
-  int x = (VGA_WIDTH / 2) - (strlen(str) / 2);
+
+  char title[] = "Kernel";
+  int x = (VGA_WIDTH / 2) - (strlen(title + 1) / 2);
   int y = (VGA_HEIGHT / 4);
+  vga_color color = MAKE_COLOR(COLOR_BLUE, COLOR_WHITE);
 
   pterm->terminal_column = x;
   pterm->terminal_row = y;
   
-  printk(0xBB, str);
+  printkc(color, 6);
+  printk(color, title);
   printk(0, "\n");
 }
 
@@ -51,14 +55,13 @@ void printPressAnyKey(vga_terminal *pterm)
   printf("\n");
   pterm->terminal_column = x;
   printf("Press any key to continue\n");
-
 }
 
 
 void     terminalBlueScreenOfDeath(vga_terminal *pterm)
 {
   setBackground(pterm);
-  printTitle(pterm, "Kernel");
+  printTitle(pterm);
   printMessage(pterm, 10);
   printPressAnyKey(pterm);
 }
