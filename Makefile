@@ -1,7 +1,7 @@
 AS:=nasm
 CC:=i586-elf-gcc
 
-CFLAGS:=-ffreestanding -O2 -Wall -Wextra -nostdlib -nostartfiles -nodefaultlibs -I ./include -std=gnu99
+CFLAGS:=-ffreestanding -O2 -Wall -Wextra -nostdlib -nostartfiles -nodefaultlibs -masm=intel -I ./include -std=gnu99
 CPPFLAGS:=
 LIBS:=-lgcc
 
@@ -54,11 +54,11 @@ SRC=    src/libc/find_prime_sup.c \
 
 OBJ=    $(SRC:.c=.o)
 
-all: myos.bin
+all: ukernel.bin
 
 .PHONEY: all clean iso run-qemu
 
-myos.bin: $(OBJ) linker.ld
+ukernel.bin: $(OBJ) linker.ld
 	$(CC) -T linker.ld -o $@ $(CFLAGS) $(OBJ) $(LIBS)
 
 %.o: %.c
@@ -69,21 +69,21 @@ myos.bin: $(OBJ) linker.ld
 
 clean:
 	rm -rf isodir
-	rm -f myos.bin myos.iso $(OBJ)
+	rm -f ukernel.bin ukernel.iso $(OBJ)
 
-iso: myos.iso
+iso: ukernel.iso
 
 isodir isodir/boot isodir/boot/grub:
 	mkdir -p $@
 
-isodir/boot/myos.bin: myos.bin isodir/boot
+isodir/boot/ukernel.bin: ukernel.bin isodir/boot
 	cp $< $@
 
 isodir/boot/grub/grub.cfg: grub.cfg isodir/boot/grub
 	cp $< $@
 
-myos.iso: isodir/boot/myos.bin isodir/boot/grub/grub.cfg
+ukernel.iso: isodir/boot/ukernel.bin isodir/boot/grub/grub.cfg
 	grub-mkrescue -o $@ isodir
 
-run-qemu: myos.iso
-	qemu-system-i386 -cdrom myos.iso -monitor vc
+run-qemu: ukernel.iso
+	qemu-system-i386 -cdrom ukernel.iso -monitor vc

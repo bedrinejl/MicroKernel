@@ -24,7 +24,7 @@ void printTitle(vga_terminal *pterm, char *str)
   pterm->terminal_column = x;
   pterm->terminal_row = y;
   
-  printk(make_color(COLOR_BLUE, COLOR_WHITE), str);
+  printk(0xBB, str);
   printk(0, "\n");
 }
 
@@ -58,7 +58,7 @@ void printPressAnyKey(vga_terminal *pterm)
 void     terminalBlueScreenOfDeath(vga_terminal *pterm)
 {
   setBackground(pterm);
-  printTitle(pterm, "WINDOWS");
+  printTitle(pterm, "Kernel");
   printMessage(pterm, 10);
   printPressAnyKey(pterm);
 }
