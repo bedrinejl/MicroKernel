@@ -1,15 +1,15 @@
 AS:=nasm
 CC:=i586-elf-gcc
 
-CFLAGS:=-ffreestanding -O2 -Wall -Wextra -nostdlib -nostartfiles -nodefaultlibs
+CFLAGS:=-ffreestanding -O3 -Wall -Wextra -nostdlib -nostartfiles -nodefaultlibs
 CPPFLAGS:=
 LIBS:=-lgcc
 
-OBJS:=\
-./src/kernel.o \
-./src/kmain.o \
-./src/gdt.o	\
-./src/vga.o \
+OBJS:=			\
+./src/kernel.o		\
+./src/kmain.o		\
+./src/gdt.o		\
+./src/vga.o		\
 ./src/libc.o
 
 all: myos.bin
@@ -28,6 +28,7 @@ myos.bin: $(OBJS) linker.ld
 clean:
 	rm -rf isodir
 	rm -f myos.bin myos.iso $(OBJS)
+	rm -f /tmp/qemu.log
 
 iso: myos.iso
 
@@ -44,4 +45,4 @@ myos.iso: isodir/boot/myos.bin isodir/boot/grub/grub.cfg
 	grub-mkrescue -o $@ isodir
 
 run-qemu: myos.iso
-	qemu-system-i386 -cdrom myos.iso -monitor vc
+	qemu-system-i386 -cdrom myos.iso -monitor stdio -d cpu_reset

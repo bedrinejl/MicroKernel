@@ -1,7 +1,7 @@
 #include "gdt.h"
 #include "vga.h"
 
-extern void	gdtFlush(t_gdtdesc *pdesc);
+extern void FASTCALL gdtFlush(t_gdtdesc *pdesc);
 
 t_gdtentry	*gdtGetEntries(void)
 {
@@ -37,7 +37,7 @@ void		gdtInitialize(void)
 
   memcpy((void*) pDesc->base, pEntries, pDesc->limit);
 
-  //gdtFlush(pEntries);
+  gdtFlush(pDesc);
 }
 
 void		gdtSetEntry(t_gdtentry *pentry, uint32_t base, uint32_t limit, uint16_t flags)

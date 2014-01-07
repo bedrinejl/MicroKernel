@@ -3,6 +3,7 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include "kernel.h"
 
 #define GDT_BASE_ADDR	(0x00000800)
 #define GDT_ENTRY_COUNT	(255)
