@@ -54,5 +54,7 @@ void     terminal_putchar_with_color(vga_terminal *pterm, char c);
 void     terminal_putstr(vga_terminal *pterm, const char *str);
 void     terminal_putstr_with_color(vga_terminal *pterm, const char *str);
 void     printk(int color, char *str);
+void     terminalBlueScreenOfDeath(vga_terminal *pterm);
+
 
 #endif

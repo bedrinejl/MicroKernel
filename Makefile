@@ -48,9 +48,9 @@ SRC=    src/libc/find_prime_sup.c \
         src/libc/printf/print/print_X.c \
 	src/kernel.o \
 	src/kmain.c \
-	src/gdt.c     \
-	src/vga.c 
-
+	src/gdt.c \
+	src/vga.c \
+	src/panic.c
 
 OBJ=    $(SRC:.c=.o)
 
