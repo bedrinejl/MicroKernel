@@ -1,12 +1,15 @@
 #include "vga.h"
+#include "paging.h"
 #include "gdt.h"
 #include "libc.h"
 
 void kmain()
 {
-  vga_terminal *pterm = get_terminal_instance();
+  vga_terminal *pterm;
 
+  InitializePaging();
   gdtInitialize();
+  pterm = get_terminal_instance(); 
   terminal_initialize(pterm);
   printk(2,"Mikro\n");
   printk(3,"     is\n");

@@ -1,7 +1,7 @@
 AS:=nasm
 CC:=i586-elf-gcc
 
-CFLAGS:=-ffreestanding -O3 -Wall -Wextra -nostdlib -nostartfiles -nodefaultlibs
+CFLAGS:=-ffreestanding -O0 -Wall -Wextra -nostdlib -nostartfiles -nodefaultlibs -masm=intel
 CPPFLAGS:=
 LIBS:=-lgcc
 
@@ -9,6 +9,7 @@ OBJS:=			\
 ./src/kernel.o		\
 ./src/kmain.o		\
 ./src/gdt.o		\
+./src/paging.o		\
 ./src/vga.o		\
 ./src/libc.o
 
@@ -29,6 +30,7 @@ clean:
 	rm -rf isodir
 	rm -f myos.bin myos.iso $(OBJS)
 	rm -f /tmp/qemu.log
+	rm -f /tmp/bochs.log
 
 iso: myos.iso
 
@@ -46,3 +48,6 @@ myos.iso: isodir/boot/myos.bin isodir/boot/grub/grub.cfg
 
 run-qemu: myos.iso
 	qemu-system-i386 -cdrom myos.iso -monitor stdio -d cpu_reset
+
+run-bochs: myos.bin
+	bochs -q -f ./bochs.cfg
