@@ -49,6 +49,7 @@ SRC=    src/libc/find_prime_sup.c				\
 	src/kernel.o						\
 	src/kmain.c						\
 	src/paging.c						\
+	src/idt.c						\
 	src/gdt.c						\
 	src/vga.c						\
 	src/panic.c
