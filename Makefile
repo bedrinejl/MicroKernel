@@ -1,7 +1,7 @@
 AS:=nasm
 CC:=i586-elf-gcc
 
-CFLAGS:=-ffreestanding -O2 -Wall -Wextra -nostdlib -nostartfiles -nodefaultlibs
+CFLAGS:=-ffreestanding -O2 -Wall -Wextra -nostdlib -nostartfiles -nodefaultlibs -I ./include -std=gnu99
 CPPFLAGS:=
 LIBS:=-lgcc
 
@@ -20,7 +20,7 @@ myos.bin: $(OBJS) linker.ld
 	$(CC) -T linker.ld -o $@ $(CFLAGS) $(OBJS) $(LIBS)
 
 %.o: %.c
-	$(CC) -c $< -o $@ -I ./include -std=gnu99 $(CFLAGS) $(CPPFLAGS)
+	$(CC) -c $< -o $@ $(CFLAGS) $(CPPFLAGS)
 
 %.o: %.asm
 	$(AS) -f elf $< -o $@
