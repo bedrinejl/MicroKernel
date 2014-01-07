@@ -7,7 +7,7 @@ void kmain()
 {
   vga_terminal *pterm;
 
-  InitializePaging();
+  //InitializePaging();
   gdtInitialize();
   pterm = get_terminal_instance(); 
   terminal_initialize(pterm);

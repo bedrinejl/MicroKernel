@@ -7,16 +7,16 @@ vga_terminal *get_terminal_instance()
   return &vga;
 }
 
+
+
 uint8_t make_color(uint8_t fg, uint8_t bg)
 {
-  return fg | bg << 4;
+  return ((fg & 0x0F) | ((bg & 0x07) << 4));
 }
 
 uint16_t make_vgaentry(char c, uint8_t color)
 {
-  uint16_t c16 = c;
-  uint16_t color16 = color;
-  return c16 | color16 << 8;
+  return (c | (color << 8));
 }
 
 void terminal_setcolor(vga_terminal *pterm, vga_color fg, vga_color bg)

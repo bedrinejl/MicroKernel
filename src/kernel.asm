@@ -26,6 +26,9 @@ multiboot_header:
 
 _start:
     cmp		eax, MULTIBOOT_BOOTLOADER_MAGIC
+
+    je		.next
+	
     je		.multibootOK
     mov		edi, 0B8000h
     mov		esi, szNoMultiboot
@@ -75,12 +78,6 @@ EnablePaging:
     or		eax, 80000000h
     mov		cr0, eax
     ret
-
-
-
-
-
-
 
 
 

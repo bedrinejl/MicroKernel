@@ -28,12 +28,12 @@ void printTitle(vga_terminal *pterm, char *str)
   printk(0, "\n");
 }
 
-void printMessage(vga_terminal *pterm, int idt)
+void printMessage(vga_terminal *pterm, uint32_t uiNumber, char *pszError, uint32_t uiAddr)
 {
   int x = (VGA_WIDTH / 7);
 
   pterm->terminal_column = x;
-  printf("A fatal exception %i has occured at _____________\n", idt);
+  printf("A fatal exception %i (%s) has occured at %p\n", uiNumber, pszError, uiAddr);
   pterm->terminal_column = x;
   printf("the current application will be terminated.\n\n");
   pterm->terminal_column = x;
@@ -46,7 +46,7 @@ void printMessage(vga_terminal *pterm, int idt)
 
 void printPressAnyKey(vga_terminal *pterm)
 {
-  int x= (VGA_WIDTH / 2) - (strlen("Press any key to continue") / 2);
+  int x = (VGA_WIDTH / 2) - (strlen("Press any key to continue") / 2);
 
   printf("\n");
   pterm->terminal_column = x;
@@ -54,11 +54,12 @@ void printPressAnyKey(vga_terminal *pterm)
 
 }
 
-
-void     terminalBlueScreenOfDeath(vga_terminal *pterm)
+void     terminalBlueScreenOfDeath(uint32_t uiNumber, char *pszError, uint32_t uiAddr)
 {
+  vga_terminal	*pterm = get_terminal_instance();
+
   setBackground(pterm);
-  printTitle(pterm, "Kernel");
-  printMessage(pterm, 10);
+  printTitle(pterm, "µKernel");
+  printMessage(pterm, uiNumber, pszError, uiAddr);
   printPressAnyKey(pterm);
 }
