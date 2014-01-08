@@ -5,12 +5,12 @@
 #include <stdint.h>
 #include "stdlib.h"
 
-#define VGA_BUFFER_MODE 0xB8000
+#define VGA_BUFFER_BASE_MODE 0xB8000
+#define VGA_BUFFER_MODE (0xB8000 + 160)
 #define MICRO_CHAR 6
 
 #define MAKE_COLOR(fg, bg) (((fg) & 0x0F) | (((bg) & 0x0F) << 4))
 #define MAKE_VGAENTRY(c, color) ((c) | ((color) << 8))
-
 
 typedef enum e_vga_color
   {
@@ -33,7 +33,7 @@ typedef enum e_vga_color
   } vga_color;
 
 static const size_t VGA_WIDTH = 80;
-static const size_t VGA_HEIGHT = 25;
+static const size_t VGA_HEIGHT = 24;
 static const vga_color fg_default_color = COLOR_LIGHT_GREEN;
 static const vga_color bg_default_color = COLOR_BLACK;
 
@@ -58,5 +58,7 @@ void     terminal_putstr(vga_terminal *pterm, const char *str);
 void     terminal_putstr_with_color(vga_terminal *pterm, const char *str);
 void     printk(int color, char *str);
 void     printkc(int color, char c);
+void     scrollup(vga_terminal *pterm, uint8_t n);
+void     printTaskBar(vga_terminal *pterm);
 
 #endif
