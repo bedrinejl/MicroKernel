@@ -1,10 +1,13 @@
 BITS 32
 
 EXTERN kmain
+EXTERN InterruptServiceRoutineCHandler
 
 GLOBAL _start
 GLOBAL gdtFlush
+GLOBAL idtFlush
 GLOBAL EnablePaging
+GLOBAL InterruptServiceRoutineDefaultHandler
 
 MULTIBOOT_PAGE_ALIGN		equ 1
 MULTIBOOT_MEMORY_INFO		equ 2
@@ -56,9 +59,9 @@ _start:
     jmp		$
 
 ; cf gdt.h
-; void __fastcall gdtFlush(t_gdtdesc *pdesc)
+; VOID __fastcall gdtFlush(t_gdtdesc *pDesc)
 gdtFlush:
-    lgdt	[ecx] ; pdesc
+    lgdt	[ecx] ; pDesc
     mov		ax, 10h
     mov		ds, ax
     mov		es, ax
@@ -67,6 +70,11 @@ gdtFlush:
     mov		ss, ax
     jmp		0x08:.flush
 .flush:
+    ret
+
+; VOID __fastcall idtFlush(t_idtdesc *pDesc)
+idtFlush:
+    lidt	[ecx] ; pDesc
     ret
 
 ; cf paging.c
@@ -78,6 +86,37 @@ EnablePaging:
     or		eax, 80000000h
     mov		cr0, eax
     ret
+
+; VOID __fastcall InterruptServiceRoutineDefaultHandler(VOID)
+InterruptServiceRoutineDefaultHandler:
+    pusha
+    mov		ax, ds
+    push	eax
+    mov		ax, 10h	; load the kernel data segmment descriptor
+    mov		ds, ax
+    mov		es, ax
+    mov		fs, ax
+    mov		gs, ax
+    call	InterruptServiceRoutineCHandler
+    pop		eax	; reload the original data segment descriptor
+    mov		ds, ax
+    mov		es, ax
+    mov		fs, ax
+    mov		gs, ax
+    popa
+    add		esp, 8
+    sti
+    iret
+
+
+
+
+
+
+
+
+
+
 
 
 
