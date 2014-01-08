@@ -72,8 +72,7 @@ void terminal_putchar_with_color(vga_terminal *pterm, uint32_t c)
 
   if (pterm->terminal_row == VGA_HEIGHT)
     {
-      memcpy(pterm->terminal_buffer, pterm->terminal_buffer + VGA_WIDTH, (VGA_WIDTH * (VGA_HEIGHT-1)));
-      pterm->terminal_row = 0;
+      scrollup(pterm, 1);
     }
 }
 
@@ -104,7 +103,61 @@ void printk(int color, char *str) {
   int lastColor = pterm->terminal_color;
 
   pterm->terminal_color = color;
-  //TODO call printf of mylib
+
   terminal_putstr_with_color(pterm, str);
   pterm->terminal_color = lastColor;
+}
+
+void scrollup(vga_terminal *pterm, uint8_t n)
+{
+  uint8_t *video;
+  uint8_t *tmp;
+  uint8_t *maxAddr = (uint8_t *)(VGA_BUFFER_MODE + (VGA_WIDTH * VGA_HEIGHT * 2));
+
+  for (video = (uint8_t *) pterm->terminal_buffer; video < maxAddr; video += 2)
+    {
+      tmp = (uint8_t *) (video + n * 160);
+      
+      if (tmp < maxAddr)
+	{
+	  *video = *tmp;
+	  *(video + 1) = *(tmp + 1);
+	}
+      else
+	{
+	  *video = 0;
+	  *(video + 1) = 0x07;
+	}
+    }
+  pterm->terminal_row -= n;
+}
+
+void printTaskBar(vga_terminal *pterm)
+{
+  uint16_t *initial_buffer = pterm->terminal_buffer;
+  size_t initial_column = pterm->terminal_column;
+  size_t initial_row = pterm->terminal_row;
+  char title[] = "Kernel";
+  vga_color title_color = MAKE_COLOR(COLOR_BLACK, COLOR_GREEN);
+  vga_color bar_color_a = MAKE_COLOR(COLOR_GREEN, COLOR_BLACK);
+  vga_color bar_color_b = MAKE_COLOR(COLOR_LIGHT_GREEN,COLOR_BLACK);
+
+  pterm->terminal_buffer = (uint16_t*) VGA_BUFFER_BASE_MODE;
+  pterm->terminal_column = 0;
+  pterm->terminal_row = 0;
+
+  printkc(title_color, 6);
+  printk(title_color, title);
+  printkc(bar_color_b, '[');
+  for(int i = 0; i < (int) (VGA_WIDTH - (strlen(title) + 3)); i += 2) {
+    printkc(bar_color_a, '=');
+    if ((i + 1) < (int) (VGA_WIDTH - (strlen(title) + 3)))
+      printkc(bar_color_b, '=');
+  }
+  printkc(bar_color_b, ']');
+
+  pterm->terminal_buffer = initial_buffer;
+  pterm->terminal_column = initial_column;
+  pterm->terminal_row = initial_row;
+
 }
