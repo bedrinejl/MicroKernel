@@ -1,6 +1,6 @@
 #include "idt.h"
 #include "stdlib.h"
-#include "asmISR.h"
+#include "isr.h"
 
 extern void FASTCALL idtFlush(t_idtdesc *pDesc);
 extern void FASTCALL RemapPIC(uint8_t btOffset1, uint8_t btOffset2);
