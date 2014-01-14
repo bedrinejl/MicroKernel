@@ -6,7 +6,7 @@
 #include "kernel.h"
 
 #define IDT_BASE_ADDR   (0x00000000)
-#define IDT_ENTRY_COUNT (32)//(255)
+#define IDT_ENTRY_COUNT (255)
 
 #define IDT_INT_GATE  (0x8E) /* interrupts P=1, DPL=00b, S=0, type=1110b => type_attr=1000_1110b=0x8E*/
 

@@ -42,16 +42,34 @@ handler_t	pHandlers[] = {
 
 };
 
-uint32_t	cpuIntHandler(t_context *pContext)
+void		STDCALL InterruptServiceRoutineCHandler(t_context *pctx)
 {
-  terminalBlueScreenOfDeath(pContext->uiNumber, pszCpuInt[pContext->uiNumber], pContext->eip);
-  return 0;
-}
-
-void		InterruptServiceRoutineCHandler(t_context ctx)
-{
-  if (ctx.uiNumber <= CPU_INT)
-    ctx.uiErrCode = cpuIntHandler(&ctx);
+  //if (ctx.uiNumber <= CPU_INT)
+  //ctx.uiErrCode = cpuIntHandler(&ctx);
   //else
   // ctx.uiErrCode = pHandlers[ctx.uiNumber - CPU_INT](&ctx);
+ 
+  if (pctx->uiNumber <= CPU_INT)
+    {
+      terminalBlueScreenOfDeath(pctx->uiNumber, pszCpuInt[pctx->uiNumber], pctx->eip);
+      //printf("ds: %p\n", ctx.ds);
+      //printf("edi: %p\n", ctx.edi);
+      //printf("esi: %p\n", ctx.esi);
+      //printf("ebp: %p\n", ctx.ebp);
+      //printf("esp: %p\n", ctx.esp);
+      //printf("ebx: %p\n", ctx.ebx);
+      //printf("edx: %p\n", ctx.edx);
+      //printf("ecx: %p\n", ctx.ecx);
+      //printf("eax: %p\n", ctx.eax);
+      //printf("uiNumber: %i\n", ctx.uiNumber);
+      //printf("uiErrCode: %i\n", ctx.uiErrCode);
+      //printf("eip: %p\n", ctx.eip);
+      //printf("cs: %p\n", ctx.cs);
+      //printf("eflags: %p\n", ctx.eflags);
+      //printf("useresp: %p\n", ctx.useresp);
+      //printf("ss: %p\n", ctx.ss);
+      asm("hlt");
+      while (1);
+      //SendEndOfInterrupt(ctx.uiNumber);
+    }
 }

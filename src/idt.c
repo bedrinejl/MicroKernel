@@ -1,10 +1,10 @@
 #include "idt.h"
 #include "stdlib.h"
 #include "isr.h"
+#include "irq.h"
 
 extern void FASTCALL idtFlush(t_idtdesc *pDesc);
 extern void FASTCALL RemapPIC(uint8_t btOffset1, uint8_t btOffset2);
-
 
 t_idtentry      *idtGetEntries(void)
 {
@@ -20,21 +20,12 @@ t_idtdesc       *idtGetDescriptor(void)
   return &desc;
 }
 
+extern void _asm_irq_0(void);
+
 void          idtInitialize(void)
 {
   t_idtdesc *pDesc = idtGetDescriptor();
   t_idtentry *pEntries = idtGetEntries();
-
-  RemapPIC(0x20, 0x28);
-  /*
-  for (int i = 0; i < IDT_ENTRY_COUNT; i++)
-    {
-      idtSetEntry(&pEntries[i], (uint32_t) &InterruptServiceRoutineDefaultHandler, 0x08, IDT_INT_GATE);
-    }
-  */
-  //idtSetEntry(&pEntries[32], (uint32_t)_asm_irq_0, 0x08, IDT_INT_GATE); /* horlog */
-  //idtSetEntry(&pEntries[33], (uint32_t)_asm_irq_1, 0x08, IDT_INT_GATE); /* calvier */
-
 
   idtSetEntry(&pEntries[0], (uint32_t) &_isr0, 0x08, IDT_INT_GATE);
   idtSetEntry(&pEntries[1], (uint32_t) &_isr1, 0x08, IDT_INT_GATE);
@@ -68,11 +59,35 @@ void          idtInitialize(void)
   idtSetEntry(&pEntries[29], (uint32_t) &_isr29, 0x08, IDT_INT_GATE);
   idtSetEntry(&pEntries[30], (uint32_t) &_isr30, 0x08, IDT_INT_GATE);
   idtSetEntry(&pEntries[31], (uint32_t) &_isr31, 0x08, IDT_INT_GATE);
-  
-  pDesc->limit = IDT_ENTRY_COUNT * sizeof(t_idtentry);
-  pDesc->base = (uint32_t)  pEntries;//IDT_BASE_ADDR;
 
-  //memcpy((void*) pDesc->base, pEntries, pDesc->limit);
+
+  RemapPIC(0x20, 0x28);
+
+  idtSetEntry(&pEntries[32], (uint32_t) &_irq0, 0x08, IDT_INT_GATE); /* horloge */
+  idtSetEntry(&pEntries[33], (uint32_t) &_irq1, 0x08, IDT_INT_GATE); /* clavier */
+  idtSetEntry(&pEntries[34], (uint32_t) &_irq2, 0x08, IDT_INT_GATE);
+  idtSetEntry(&pEntries[35], (uint32_t) &_irq3, 0x08, IDT_INT_GATE);
+  idtSetEntry(&pEntries[36], (uint32_t) &_irq4, 0x08, IDT_INT_GATE);
+  idtSetEntry(&pEntries[37], (uint32_t) &_irq5, 0x08, IDT_INT_GATE);
+  idtSetEntry(&pEntries[38], (uint32_t) &_irq6, 0x08, IDT_INT_GATE);
+  idtSetEntry(&pEntries[39], (uint32_t) &_irq7, 0x08, IDT_INT_GATE);
+  idtSetEntry(&pEntries[40], (uint32_t) &_irq8, 0x08, IDT_INT_GATE);
+  idtSetEntry(&pEntries[41], (uint32_t) &_irq9, 0x08, IDT_INT_GATE);
+  idtSetEntry(&pEntries[42], (uint32_t) &_irq10, 0x08, IDT_INT_GATE);
+  idtSetEntry(&pEntries[43], (uint32_t) &_irq11, 0x08, IDT_INT_GATE);
+  idtSetEntry(&pEntries[44], (uint32_t) &_irq12, 0x08, IDT_INT_GATE);
+  idtSetEntry(&pEntries[45], (uint32_t) &_irq13, 0x08, IDT_INT_GATE);
+  idtSetEntry(&pEntries[46], (uint32_t) &_irq14, 0x08, IDT_INT_GATE);
+  idtSetEntry(&pEntries[47], (uint32_t) &_irq15, 0x08, IDT_INT_GATE);
+
+  irqInitialize();
+
+  memset(&pEntries[48], 0, (IDT_ENTRY_COUNT - 48) * sizeof(t_idtentry));
+
+  pDesc->limit = IDT_ENTRY_COUNT * sizeof(t_idtentry);
+  pDesc->base = (uint32_t) IDT_BASE_ADDR;
+
+  memcpy((void*) pDesc->base, pEntries, pDesc->limit);
 
   idtFlush(pDesc);
 }

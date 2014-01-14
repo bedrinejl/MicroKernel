@@ -4,6 +4,8 @@
 #include "idt.h"
 #include "stdlib.h"
 
+extern void FASTCALL outb(uint8_t val, uint16_t port);
+
 void kmain()
 {
   vga_terminal *pterm;
@@ -16,9 +18,14 @@ void kmain()
   pterm = get_terminal_instance(); 
   terminal_initialize(pterm);
 
-  printTaskBar(pterm);
-  i = 6575 * 65 / (56 - 56);
-  for(i = 0; i < 200; i++)
-      printf("%i\n", i);
+
+  //outb(0xfd, 0x21);
+  //outb(0xff, 0xa1);
+  asm("sti");
+
+  // printf("%i\n", 876/0);
+  //printTaskBar(pterm);
+  //for(int i = 0; i < 200; i++)
+  //    printf("%i\n", i);
   while(1);
 }

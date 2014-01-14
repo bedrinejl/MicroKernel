@@ -26,7 +26,7 @@ typedef struct s_context
 
 typedef uint32_t (*handler_t) (t_context *pContext);
 
-void InterruptServiceRoutineCHandler(t_context ctx);
+void STDCALL InterruptServiceRoutineCHandler(t_context *pctx);
 
 extern void _isr0(void);
 extern void _isr1(void);

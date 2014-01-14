@@ -9,7 +9,7 @@ void setBackground(vga_terminal *pterm)
   
   pterm->terminal_color = MAKE_COLOR(COLOR_WHITE, COLOR_BLUE);
   c = MAKE_VGAENTRY(' ', MAKE_COLOR(COLOR_BLUE, COLOR_BLUE));
-  idx = (VGA_HEIGHT * VGA_WIDTH);
+  idx = ((VGA_HEIGHT + 1) * VGA_WIDTH);
   while (idx--)
     {
       pterm->terminal_buffer[idx] = c;
@@ -61,6 +61,7 @@ void     terminalBlueScreenOfDeath(uint32_t uiNumber, char *pszError, uint32_t u
 {
   vga_terminal	*pterm = get_terminal_instance();
 
+  pterm->terminal_buffer = VGA_BUFFER_BASE_MODE;
   setBackground(pterm);
   printTitle(pterm);
   printMessage(pterm, uiNumber, pszError, uiAddr);

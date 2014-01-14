@@ -33,7 +33,7 @@ void		gdtInitialize(void)
   gdtSetEntry(&pEntries[6], 0, 0, GDT_STACK_PL3); // user stack
 
   pDesc->limit = GDT_ENTRY_COUNT * sizeof(t_gdtentry);
-  pDesc->base = GDT_BASE_ADDR;
+  pDesc->base = (uint32_t) GDT_BASE_ADDR;
 
   memcpy((void*) pDesc->base, pEntries, pDesc->limit);
 

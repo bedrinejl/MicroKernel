@@ -7,6 +7,7 @@
 
 void    putchar(char c);
 void    *memcpy(void *dest, const void *src, size_t n);
+void	*memset(void *s, int c, size_t n);
 int     isneg(int nb);
 int     put_nbr(int nb);
 int     swap(int *a, int *b);

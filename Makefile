@@ -16,6 +16,7 @@ SRC=    src/libc/find_prime_sup.c				\
         src/libc/swap.c						\
         src/libc/getnbr.c					\
 	src/libc/memcpy.c					\
+	src/libc/memset.c					\
         src/libc/power_rec.c					\
         src/libc/putstr.c					\
         src/libc/square_root.c					\
@@ -48,10 +49,12 @@ SRC=    src/libc/find_prime_sup.c				\
         src/libc/printf/print/print_X.c				\
 	src/kernel.o						\
 	src/asmISR.o						\
+	src/asmIRQ.o						\
 	src/kmain.c						\
 	src/paging.c						\
 	src/idt.c						\
 	src/isr.c						\
+	src/irq.c						\
 	src/gdt.c						\
 	src/vga.c						\
 	src/panic.c

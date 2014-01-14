@@ -3,12 +3,15 @@ BITS 32
 EXTERN InterruptServiceRoutineCHandler
 
 GLOBAL RemapPIC
-	
+GLOBAL SendEndOfInterrupt
+GLOBAL outb
+GLOBAL inb
+
 %macro ISR_ERROR 1
   GLOBAL _isr%1
 _isr%1:
     cli
-    push	%1
+    push	byte %1
     jmp		_isrDefaultHandler
 %endmacro
 
@@ -17,7 +20,7 @@ _isr%1:
 _isr%1:
     cli
     push	0
-    push	%1
+    push	byte %1
     jmp		_isrDefaultHandler
 %endmacro
 
@@ -58,13 +61,14 @@ ISR_NOERROR	31
 _isrDefaultHandler:
     pusha
     mov		ax, ds
-    push	eax
+    push	eax	    
     mov		ax, 10h	; load the kernel data segmment descriptor
     mov		ds, ax
     mov		es, ax
     mov		fs, ax
     mov		gs, ax
-    call	InterruptServiceRoutineCHandler
+    push	esp	; push ptr of t_context struct
+    call	InterruptServiceRoutineCHandler ; __stdcall
     pop		eax	; reload the original data segment descriptor
     mov		ds, ax
     mov		es, ax
@@ -92,9 +96,9 @@ ICW4_8086	equ 1
 ; VOID __fastcall RemapPIC(DWORD dwOffset1, DWORD dwOffset2)
 RemapPIC:
 ; ecx=dwOffset1, edx=dwOffset2
-    in		al, PIC1_DATA
-    mov		ah, al
-    in		al, PIC2_DATA
+    in		al, PIC1_DATA	;
+    mov		ah, al		;
+    in		al, PIC2_DATA	;
     push	eax	; save masks
 
     mov		al, ICW1_INIT + ICW1_ICW4
@@ -114,9 +118,33 @@ RemapPIC:
     mov		al, ICW4_8086
     out		PIC1_DATA, al
     out		PIC2_DATA, al
-
     pop		eax		; restore saved masks
     out		PIC2_DATA, al
     mov		al, ah
     out		PIC1_DATA, al
+    ret
+
+; VOID __fastcall SendEndOfInterrupt(DWORD dwIRQ)
+SendEndOfInterrupt:
+    ; ecx = dwIRQ
+    mov		al, PIC_EOI
+    cmp		ecx, 8
+    jb		.pic1
+    out		PIC2_COMMAND, al
+.pic1:
+    out		PIC1_COMMAND, al
+    ret
+
+;  VOID __fastcall outb(BYTE btValue, WORD wPort)
+outb:
+    ; ecx=btValue, edx=wPort
+    mov		al, cl
+    out		dx, al
+    ret
+
+; BYTE __fastcall inb(WORD wPort)
+inb:
+    xor		eax, eax
+    mov		dx, cx
+    in		al, dx
     ret
