@@ -34,7 +34,7 @@ void printTitle(vga_terminal *pterm)
 
 void printMessage(vga_terminal *pterm, uint32_t uiNumber, char *pszError, uint32_t uiAddr)
 {
-  int x = (VGA_WIDTH / 7);
+  int x = (VGA_WIDTH / 10);
 
   pterm->terminal_column = x;
   printf("A fatal exception %i (%s) has occured at %p\n", uiNumber, pszError, uiAddr);
