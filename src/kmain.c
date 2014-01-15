@@ -14,18 +14,15 @@ void kmain()
 
   InitializePaging();
   gdtInitialize();
-  // idtInitialize();
-  //pterm = get_terminal_instance(); 
-  //  terminal_initialize(pterm);
+  idtInitialize();
+  pterm = get_terminal_instance(); 
+  terminal_initialize(pterm);
 
 
   //outb(0xfd, 0x21);
   //outb(0xff, 0xa1);
-  //asm("sti");
-
-  //printf("%i", 876);
-  //printTaskBar(pterm);
-  //for(int i = 0; i < 200; i++)
-  //    printf("%i\n", i);
+  asm("sti");
+  //printf("%i\n", 5 /0);
+  
   while(1);
 }

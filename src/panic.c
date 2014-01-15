@@ -1,7 +1,6 @@
 #include "vga.h"
 #include "stdlib.h"
 
-
 void setBackground(vga_terminal *pterm)
 {
   uint32_t idx;
@@ -18,7 +17,6 @@ void setBackground(vga_terminal *pterm)
 
 void printTitle(vga_terminal *pterm)
 {
-
   char title[] = "Kernel";
   int x = (VGA_WIDTH / 2) - (strlen(title + 1) / 2);
   int y = (VGA_HEIGHT / 4);
@@ -34,10 +32,12 @@ void printTitle(vga_terminal *pterm)
 
 void printMessage(vga_terminal *pterm, uint32_t uiNumber, char *pszError, uint32_t uiAddr)
 {
-  int x = (VGA_WIDTH / 10);
+  int x = (VGA_WIDTH / 6);
 
   pterm->terminal_column = x;
-  printf("A fatal exception %i (%s) has occured at %p\n", uiNumber, pszError, uiAddr);
+  printf("A fatal exception %i (%s)\n", uiNumber, pszError);
+  pterm->terminal_column = x;
+  printf("has occured at %p\n\n", uiAddr);
   pterm->terminal_column = x;
   printf("the current application will be terminated.\n\n");
   pterm->terminal_column = x;
