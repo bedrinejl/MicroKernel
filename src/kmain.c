@@ -12,7 +12,7 @@ void kmain()
 
   int i;
 
-  //InitializePaging();
+  InitializePaging();
   gdtInitialize();
   idtInitialize();
   pterm = get_terminal_instance(); 
@@ -22,10 +22,7 @@ void kmain()
   //outb(0xfd, 0x21);
   //outb(0xff, 0xa1);
   asm("sti");
-
-  // printf("%i\n", 876/0);
-  //printTaskBar(pterm);
-  //for(int i = 0; i < 200; i++)
-  //    printf("%i\n", i);
+  //printf("%i\n", 5 /0);
+  
   while(1);
 }

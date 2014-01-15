@@ -19,7 +19,7 @@ MULTIBOOT_BOOTLOADER_MAGIC	equ 2BADB002h
 
 KERNEL_STACK_SIZE		equ 8192
 
-SECTION .text
+SECTION .ldr
 
 ALIGN 4
 multiboot_header:
@@ -27,10 +27,10 @@ multiboot_header:
     dd		MULTIBOOT_HEADER_FLAGS
     dd		MULTIBOOT_CHECKSUM
 
+SECTION .text
 _start:
     cmp		eax, MULTIBOOT_BOOTLOADER_MAGIC
 
-    je		.next
 
     je		.multibootOK
     mov		edi, 0B8000h
@@ -80,7 +80,7 @@ idtFlush:
 ; cf paging.c
 ; VOID __fastcall EnablePaging(VOID)
 EnablePaging:
-    xor		eax, eax
+    mov         eax, ecx	
     mov		cr3, eax
     mov		eax, cr0
     or		eax, 80000000h

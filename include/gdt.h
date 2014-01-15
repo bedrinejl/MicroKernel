@@ -5,7 +5,7 @@
 #include <stdint.h>
 #include "kernel.h"
 
-#define GDT_BASE_ADDR	(0x00000800)
+#define GDT_BASE_ADDR	(0xc0000800)
 #define GDT_ENTRY_COUNT	(255)
 
 #define GDT_ENTRY_ACCESS_PRESENT_BIT	(0x80)

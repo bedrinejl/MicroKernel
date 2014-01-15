@@ -1,6 +1,6 @@
 #include "paging.h"
 
-extern void FASTCALL EnablePaging(void); // cf kernel.asm
+extern void FASTCALL EnablePaging(uint32_t *pageDir); // cf kernel.asm
 
 uint32_t	*GetKernelPageDirectory(void)
 {
@@ -15,32 +15,26 @@ uint32_t	*GetKernelPageTable(void)
 
   return puiKernelPageTable;
 }
-//static uint32_t	puiKernelPageDir[1024] __attribute__((aligned (4096)));
-// static uint32_t	puiKernelPageTable[1024] __attribute__((aligned (4096)));
+
 void  InitializePaging(void)
 {
-  uint32_t	*puiKernelPageDir = GetKernelPageDirectory();
-  uint32_t	*puiKernelPageTable = GetKernelPageTable();
-  uint32_t	i, j;
+  void *kernelpagedirPtr = 0;
+  void *kernelpagetablePtr = 0;
+  uint32_t *kernelpagedir = GetKernelPageDirectory();
+  uint32_t *kernelpagetable = GetKernelPageTable();
+  int k = 0;
 
-  //puiKernelPageDir += (0x40000000 / sizeof(uint32_t));	// translate virtual address to physical address
-  // puiKernelPageTable += (0x40000000 / sizeof(uint32_t));
-
-  i = SIZEOFARRAY(puiKernelPageTable);
-  j = 0;
-  while (i--)
+  kernelpagedirPtr = (char *)kernelpagedir + 0x40000000;
+  kernelpagetablePtr = (char *)kernelpagetable + 0x40000000;
+  for (k = 0; k < 1024; k++)
     {
-      puiKernelPageTable[i] = j | 0x03;
-      j += PAGE_SIZE;
-      puiKernelPageDir[i] = 0;
+      kernelpagetable[k] = (k * 4096) | 0x3;
+      kernelpagedir[k] = 0;
     }
+  
+  kernelpagedir[0] = (uint32_t)kernelpagetablePtr | 0x3;
+  kernelpagedir[768] = (uint32_t)kernelpagetablePtr | 0x3;
 
-  puiKernelPageDir[0] = (uint32_t) ((char*) puiKernelPageTable + 0x40000000) | 0x03;
-  puiKernelPageDir[768] = (uint32_t) ((char*) puiKernelPageTable + 0x40000000) | 0x03;
-  asm("xor		eax, eax");
-  asm("mov		cr3, eax");
-  asm("mov		eax, cr0");
-  asm("or		eax, 0x80000000");
-  asm("mov		cr0, eax");
-  //EnablePaging();
+  EnablePaging(kernelpagedirPtr);
 }
+
