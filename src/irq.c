@@ -1,6 +1,5 @@
 #include "irq.h"
-
-extern void FASTCALL SendEndOfInterrupt(uint32_t dwIRQ);
+#include "keyboard.h"
 
 static handler_t pirqHandlers[MAX_IRQ_HANDLERS] = {0};
 
@@ -35,8 +34,7 @@ void		STDCALL InterruptRequestCHandler(t_context *pctx)
       && pirqHandlers[pctx->uiNumber - 32])
     pirqHandlers[pctx->uiNumber - 32](pctx);
 
-  //printf("SendEndOfInterrupr(%i)\n", pctx->uiNumber);
-  SendEndOfInterrupt(pctx->uiNumber);
+  SendEndOfInterrupt(pctx->uiNumber - 32);
 }
 
 static void    	irqClockHandler(t_context *pctx)
@@ -46,7 +44,21 @@ static void    	irqClockHandler(t_context *pctx)
 
 static void    	irqKeyboardHandler(t_context *pctx)
 {
-  printf("keyboard\n");
+  uint32_t vk;
+  uint8_t c;
+
+  //printf("%p\n", GetScanCode());
+  //return;
+
+  vk = GetVirtualKey();
+  if (vk && !(vk & VK_KEYUP))
+    {
+      c = MapVirtualKey(vk, MAPVK_VK_TO_VSC, KEYBOARD_LAYOUT_FR);
+      if (c)
+	terminal_putchar(get_terminal_instance(), c);
+    }
+
+  return;
 }
 
 void		irqInitialize(void)

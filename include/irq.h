@@ -13,6 +13,11 @@ handler_t	irqRegisterHandler(uint32_t dwIRQ, handler_t pHandler);
 handler_t	irqUnregisterHandler(uint32_t dwIRQ);
 void		STDCALL InterruptRequestCHandler(t_context *pctx);
 
+
+extern void FASTCALL SendEndOfInterrupt(uint32_t dwIRQ);
+extern void FASTCALL outb(uint8_t val, uint16_t port);
+extern uint8_t FASTCALL inb(uint16_t port);
+
 extern void _irq0(void);
 extern void _irq1(void);
 extern void _irq2(void);

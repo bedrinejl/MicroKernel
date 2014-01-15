@@ -57,6 +57,7 @@ SRC=    src/libc/find_prime_sup.c				\
 	src/irq.c						\
 	src/gdt.c						\
 	src/vga.c						\
+	src/keyboard.c						\
 	src/panic.c
 
 OBJ=    $(SRC:.c=.o)
