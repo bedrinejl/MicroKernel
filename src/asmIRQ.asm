@@ -4,6 +4,7 @@ EXTERN InterruptRequestCHandler
 
 GLOBAL RemapPIC
 GLOBAL GetScanCode
+GLOBAL SetCursorPos
 GLOBAL SendEndOfInterrupt
 GLOBAL outb
 GLOBAL inb
@@ -138,4 +139,32 @@ GetScanCode:
     jz		.loop
     mov		dx, KEYBOARD_DATA
     in		al, dx
+    ret
+
+VGA_WIDTH		equ 80
+CURSOR_POS_HIGH_REG	equ 0Eh
+CURSOR_POS_LOW_REG	equ 0Fh
+
+CURSOR_COMMAND		equ 03D4h
+CURSOR_DATA		equ 03D5h
+
+; VOID __fastcall SetCursorPos(int X, int Y)
+SetCursorPos:
+; ecx=X
+; edx=Y
+    imul	edx, VGA_WIDTH
+    add		ecx, edx		;ecx = Y * VGA_WIDTH + X
+    mov		dx, CURSOR_COMMAND
+    mov		al, CURSOR_POS_LOW_REG
+    out		dx, al
+    mov		dx, CURSOR_DATA
+    mov		al, cl
+    out		dx, al
+    mov		dx, CURSOR_COMMAND
+    mov		al, CURSOR_POS_HIGH_REG
+    out		dx, al
+    shr		cx, 8
+    mov		dx, CURSOR_DATA
+    mov		al, cl
+    out		dx, al
     ret

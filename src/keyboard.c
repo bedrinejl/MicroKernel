@@ -3,6 +3,7 @@
 #include "keyboard.h"
 
 static uint8_t btKeyboardLayoutUS[] = {
+  0, 0, 0,
   0x1B, 0x1B, 0x1B,	/*      esc     (0x01)  */
   '1', '!', '1',
   '2', '@', '2',
@@ -103,7 +104,8 @@ static uint8_t btKeyboardLayoutUS[] = {
 };
 
 static uint8_t btKeyboardLayoutFR[] = {
-  0x1B, 0x1B, 0x1B,	/*      esc     (0x01)  */
+  0, 0, 0,
+  VK_ESCAPE, VK_ESCAPE, VK_ESCAPE,	/*      esc     (0x01)  */
   '&', '1', 0,
   0x82, '2', '~',
   '"', '3', '#',
@@ -116,8 +118,8 @@ static uint8_t btKeyboardLayoutFR[] = {
   0x85, '0', '@',
   ')', 0xF8, ']',
   '=', '+', '}',
-  0, 0, 0,	/*      backspace       */
-  0, 0, 0,	/*      tab     */
+  VK_BACKSPACE, VK_BACKSPACE, VK_BACKSPACE,	/*      backspace       */
+  VK_TAB, VK_TAB, VK_TAB,	/*      tab     */
   'a', 'A', 0,
   'z', 'Z', 0,
   'e', 'E', 0,
@@ -130,7 +132,7 @@ static uint8_t btKeyboardLayoutFR[] = {
   'p', 'P', 0,
   '^', '{', 0,
   '$', 0x9C, 0,
-  0, 0, 0,	/*      enter   */
+  VK_RETURN, VK_RETURN, VK_RETURN,	/*      enter   */
   0xFF, 0xFF, 0xFF,	/*      ctrl    */
   'q', 'Q', 0,
   's', 'S', 0,
@@ -244,6 +246,14 @@ uint32_t GetVirtualKey(void)
       dwFlags ^= (bEscaped ? VK_RMENU : VK_LMENU);
       break;
 
+    case 0x4D:
+      vk = dwFlags | (bEscaped ? VK_RIGHT : sc);
+      break;
+
+    case 0x4B:
+      vk = dwFlags | (bEscaped ? VK_LEFT : sc);
+      break;
+
     default:
       vk = dwFlags | sc;
     }
@@ -265,7 +275,7 @@ static uint32_t	VirtualKeyToScanCode(uint32_t vk, uint32_t dwKeybordLayout)
   else if (vk & VK_RMENU)
     s += 2;
 
-  return ppKeyboardLayout[dwKeybordLayout][(c - 1) * 3 + s];
+  return ppKeyboardLayout[dwKeybordLayout][c * 3 + s];
 }
 
 static uint32_t ScanCodeToVirtualKey(uint32_t uCode, uint32_t dwKeybordLayout)

@@ -1,6 +1,8 @@
 #ifndef _KEYBOARD_H
 #define _KEYBOARD_H
 
+#include "kernel.h"
+
 #define KEYBOARD_LAYOUT_US	(0)
 #define KEYBOARD_LAYOUT_FR	(1)
 
@@ -21,14 +23,14 @@
 
 #define VK_KEYUP	(0x80)
 
-#define VK_ESCAPE	(0x01)
-#define VK_DEL		(0x53)
+#define VK_ESCAPE	(0x1B)
+#define VK_DEL		(0x7F)
 #define VK_TAB		(0x0F)
-#define VK_SPACE	(0x39)
-#define VK_BACKSPACE	(0x0E)
-#define VK_RETURN	(0x1C)
-
-
+#define VK_SPACE	(0x20)
+#define VK_BACKSPACE	(0x08)
+#define VK_RETURN	(0x0A)
+#define VK_RIGHT	(0x0100)
+#define VK_LEFT		(0x0200)
 
   /*
     The uCode parameter is a virtual-key code and is translated into a scan 
@@ -49,6 +51,7 @@
 
 
 extern uint8_t GetScanCode(void);
+extern void FASTCALL SetCursorPos(int X, int Y);
 uint32_t GetVirtualKey(void);
 uint32_t MapVirtualKey(uint32_t uCode, uint32_t uMapType, uint32_t dwKeybordLayout);
 

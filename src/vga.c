@@ -1,4 +1,5 @@
 #include "vga.h"
+#include "keyboard.h"
 
 vga_terminal *get_terminal_instance()
 {
@@ -19,15 +20,13 @@ void terminal_initialize(vga_terminal *pterm)
 
 void terminal_clear_buffer(vga_terminal *pterm)
 {
-  uint32_t idx;
+  uint32_t i;
   uint16_t c;
-
-  c = MAKE_VGAENTRY(' ', 0);
-  idx = (VGA_HEIGHT * VGA_WIDTH);
-  while (idx--)
-    {
-      pterm->terminal_buffer[idx] = c;
-    }
+  
+  i = (VGA_HEIGHT * VGA_WIDTH);
+  c = MAKE_VGAENTRY(0, pterm->terminal_color);
+  while (i--)
+    pterm->terminal_buffer[i] = c;
 }
 
 void terminal_initialize_with_color(vga_terminal *pterm, vga_color fg, vga_color bg)
@@ -41,10 +40,10 @@ void terminal_initialize_with_color(vga_terminal *pterm, vga_color fg, vga_color
 
 void terminal_put_vgaentry_at(vga_terminal *pterm, uint32_t c, vga_color color, size_t x, size_t y)
 {
-  const size_t index = y * VGA_WIDTH + x;
   if (c == MICRO_CHAR)
     c = 0xE6;
-  pterm->terminal_buffer[index] = MAKE_VGAENTRY(c, color);
+
+  pterm->terminal_buffer[y * VGA_WIDTH + x] = MAKE_VGAENTRY(c, color);
 }
 
 void terminal_putchar(vga_terminal *pterm, uint32_t c)
@@ -54,26 +53,50 @@ void terminal_putchar(vga_terminal *pterm, uint32_t c)
 
 void terminal_putchar_with_color(vga_terminal *pterm, uint32_t c)
 {
-  if (c == '\n')
+  switch (c)
     {
+    case VK_RETURN:
       pterm->terminal_row++;
       pterm->terminal_column = 0;
-    }
-  else
-    {
-      terminal_put_vgaentry_at(pterm, c, pterm->terminal_color, pterm->terminal_column, pterm->terminal_row);
-      pterm->terminal_column++;
-    }
-  if (pterm->terminal_column == VGA_WIDTH)
-    {
-      pterm->terminal_column = 0;
-      pterm->terminal_row++;
-    }
+      break;
 
-  if (pterm->terminal_row == VGA_HEIGHT)
-    {
-      scrollup(pterm, 1);
+    case VK_BACKSPACE:
+      if (pterm->terminal_column)
+	pterm->terminal_column--;      
+      else if (pterm->terminal_row)
+	{
+	  pterm->terminal_row--;
+	  pterm->terminal_column = VGA_WIDTH;
+	}
+      terminal_put_vgaentry_at(pterm, 0, pterm->terminal_color, pterm->terminal_column, pterm->terminal_row);
+      break;
+
+    case VK_DEL:
+      break;
+
+    case VK_RIGHT:
+    case VK_LEFT:
+
+      //break;
+
+    default:
+      terminal_put_vgaentry_at(pterm, c, pterm->terminal_color, pterm->terminal_column++, pterm->terminal_row);
+
+      if (pterm->terminal_column == VGA_WIDTH)
+	{
+	  pterm->terminal_column = 0;
+	  pterm->terminal_row++;
+	}
     }
+  if (pterm->terminal_row == VGA_HEIGHT)
+    scrollup(pterm, 1);
+
+  terminal_show_cursor(pterm);
+}
+
+void terminal_show_cursor(vga_terminal *pterm)
+{
+  SetCursorPos(pterm->terminal_column, pterm->terminal_row + 1);
 }
 
 void terminal_putstr_with_color(vga_terminal *pterm, const char* data)

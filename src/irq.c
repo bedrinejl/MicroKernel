@@ -45,7 +45,7 @@ static void    	irqClockHandler(t_context *pctx)
 static void    	irqKeyboardHandler(t_context *pctx)
 {
   uint32_t vk;
-  uint8_t c;
+  uint8_t c = 0;
 
   //printf("%p\n", GetScanCode());
   //return;

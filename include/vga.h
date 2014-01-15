@@ -60,5 +60,6 @@ void     printk(int color, char *str);
 void     printkc(int color, char c);
 void     scrollup(vga_terminal *pterm, uint8_t n);
 void     printTaskBar(vga_terminal *pterm);
+void	 terminal_show_cursor(vga_terminal *pterm);
 
 #endif
