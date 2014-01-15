@@ -34,7 +34,7 @@ void		gdtInitialize(void)
 
   pDesc->limit = GDT_ENTRY_COUNT * sizeof(t_gdtentry);
   pDesc->base = (uint32_t) GDT_BASE_ADDR;
-
+  //pDesc->base = (uint32_t) pEntries;
   memcpy((void*) pDesc->base, pEntries, pDesc->limit);
 
   gdtFlush(pDesc);
