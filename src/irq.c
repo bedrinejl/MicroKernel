@@ -1,5 +1,7 @@
 #include "irq.h"
 #include "keyboard.h"
+#include "vga.h"
+#include "stdlib.h"
 
 static handler_t pirqHandlers[MAX_IRQ_HANDLERS] = {0};
 
@@ -37,16 +39,19 @@ void		STDCALL InterruptRequestCHandler(t_context *pctx)
   SendEndOfInterrupt(pctx->uiNumber - 32);
 }
 
-static void    	irqClockHandler(t_context *pctx)
+static uint32_t    	irqClockHandler(t_context *pctx)
 {
+  UNUSED(pctx);
   printf("clock\n");
+  return 0;
 }
 
-static void    	irqKeyboardHandler(t_context *pctx)
+static uint32_t    	irqKeyboardHandler(t_context *pctx)
 {
   uint32_t vk;
   uint8_t c = 0;
 
+  UNUSED(pctx);
   //printf("%p\n", GetScanCode());
   //return;
 
@@ -58,7 +63,7 @@ static void    	irqKeyboardHandler(t_context *pctx)
 	terminal_putchar(get_terminal_instance(), c);
     }
 
-  return;
+  return 0;
 }
 
 void		irqInitialize(void)

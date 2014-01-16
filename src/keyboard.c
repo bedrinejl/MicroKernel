@@ -263,7 +263,7 @@ uint32_t GetVirtualKey(void)
 }
 
 
-static uint32_t	VirtualKeyToScanCode(uint32_t vk, uint32_t dwKeybordLayout)
+static uint32_t	VirtualKeyToScanCode(uint32_t vk, uint32_t dwKeyboardLayout)
 {
   uint8_t c, s;
 
@@ -275,23 +275,25 @@ static uint32_t	VirtualKeyToScanCode(uint32_t vk, uint32_t dwKeybordLayout)
   else if (vk & VK_RMENU)
     s += 2;
 
-  return ppKeyboardLayout[dwKeybordLayout][c * 3 + s];
+  return ppKeyboardLayout[dwKeyboardLayout][c * 3 + s];
 }
 
-static uint32_t ScanCodeToVirtualKey(uint32_t uCode, uint32_t dwKeybordLayout)
+static uint32_t ScanCodeToVirtualKey(uint32_t uCode, uint32_t dwKeyboardLayout)
 {
+  UNUSED(uCode);
+  UNUSED(dwKeyboardLayout);
   return 0;
 }
 
-uint32_t	MapVirtualKey(uint32_t uCode, uint32_t uMapType, uint32_t dwKeybordLayout)
+uint32_t	MapVirtualKey(uint32_t uCode, uint32_t uMapType, uint32_t dwKeyboardLayout)
 {
   switch (uMapType)
     {
     case MAPVK_VK_TO_VSC:
-      return VirtualKeyToScanCode(uCode, dwKeybordLayout);
+      return VirtualKeyToScanCode(uCode, dwKeyboardLayout);
 
     case MAPVK_VSC_TO_VK:
-      return ScanCodeToVirtualKey(uCode, dwKeybordLayout);
+      return ScanCodeToVirtualKey(uCode, dwKeyboardLayout);
     }
   return 0;
 }
