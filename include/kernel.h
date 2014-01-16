@@ -15,4 +15,6 @@ typedef int bool;
 #define TRUE	((bool) 1)
 #define FALSE	((bool) 0)
 
+#define UNUSED(x) ((void) (x))
+
 #endif
