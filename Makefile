@@ -96,7 +96,7 @@ isodir/boot/grub/grub.cfg: grub.cfg isodir/boot/grub
 ukernel.iso: isodir/boot/ukernel.bin isodir/boot/grub/grub.cfg
 	grub-mkrescue -o $@ isodir
 
-run-bochs: ukernel.bin
+run-bochs: ukernel.iso
 	bochs -q -f ./bochs.cfg
 
 run-qemu: ukernel.iso
