@@ -26,6 +26,7 @@ void  InitializePaging(void)
 
   kernelpagedirPtr = (char *)kernelpagedir + 0x40000000;
   kernelpagetablePtr = (char *)kernelpagetable + 0x40000000;
+
   for (k = 0; k < 1024; k++)
     {
       kernelpagetable[k] = (k * 4096) | 0x3;

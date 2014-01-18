@@ -66,4 +66,7 @@ void     terminalBlueScreenOfDeath(uint32_t uiNumber, char *pszError, uint32_t u
   printTitle(pterm);
   printMessage(pterm, uiNumber, pszError, uiAddr);
   printPressAnyKey(pterm);
+
+  asm volatile ("hlt");
+  while (1);
 }

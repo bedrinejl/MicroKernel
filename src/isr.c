@@ -1,27 +1,28 @@
 #include "isr.h"
 #include "panic.h"
+#include "syscall.h"
 
 static char	*pszCpuInt[] = {
-  "Division by zero exception",
-  "Debug exception",
-  "Non maskable interrupt",
-  "Breakpoint exception",
-  "Into detected overflow",
-  "Out of bounds exception",
-  "Invalid opcode exception",
-  "No coprocessor exception",
-  "Double fault",
-  "Coprocessor segment overrun",
-  "Bad TSS",
-  "Segment not present",
-  "Stack fault",
-  "General protection fault",
-  "Page fault",
+  "Division by Zero Exception",
+  "Debug Exception",
+  "Non Maskable Interrupt",
+  "Breakpoint Exception",
+  "Overflow Exception",
+  "Out of bounds Exception",
+  "Invalid Opcode Exception",
+  "No Coprocessor Exception",
+  "Double Fault Exception",
+  "Coprocessor Segment Overrun",
+  "Invalid TSS Exception",
+  "Segment Not Present",
+  "Stack Fault Exception",
+  "General Protection Fault",
+  "Page-Fault Exception",
   "Unknown interrupt exception",
-  "Coprocessor fault",
-  "Alignment check exception",
-  "Machine check exception",
-  "Reserved",
+  "x87 FPU Error",
+  "Align Check Exception",
+  "Machine Check Exception",
+  "SIMD FPU Exception",
   "Reserved",
   "Reserved",
   "Reserved",
@@ -68,8 +69,7 @@ void		STDCALL InterruptServiceRoutineCHandler(t_context *pctx)
       //printf("eflags: %p\n", ctx.eflags);
       //printf("useresp: %p\n", ctx.useresp);
       //printf("ss: %p\n", ctx.ss);
-      asm("hlt");
-      while (1);
-      //SendEndOfInterrupt(ctx.uiNumber);
     }
+  else if (pctx->uiNumber == SYSCALL_INTERRUPT_NUMBER)
+    KiSysCallHandler(pctx);
 }

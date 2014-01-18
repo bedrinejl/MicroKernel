@@ -56,6 +56,7 @@ SRC=    src/libc/find_prime_sup.c				\
 	src/isr.c						\
 	src/irq.c						\
 	src/gdt.c						\
+	src/syscall.c						\
 	src/vga.c						\
 	src/keyboard.c						\
 	src/panic.c

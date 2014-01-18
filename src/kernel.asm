@@ -17,7 +17,7 @@ MULTIBOOT_HEADER_FLAGS		equ MULTIBOOT_PAGE_ALIGN | MULTIBOOT_MEMORY_INFO
 MULTIBOOT_CHECKSUM		equ -(MULTIBOOT_HEADER_MAGIC + MULTIBOOT_HEADER_FLAGS)
 MULTIBOOT_BOOTLOADER_MAGIC	equ 2BADB002h
 
-KERNEL_STACK_SIZE		equ 8192
+KERNEL_STACK_SIZE		equ 4096
 
 SECTION .ldr
 
@@ -78,8 +78,9 @@ idtFlush:
     ret
 
 ; cf paging.c
-; VOID __fastcall EnablePaging(VOID)
+; VOID __fastcall EnablePaging(t_kernel_page_directory *pKernelPageDir)
 EnablePaging:
+; ecx=pKernelPageDir
     mov         eax, ecx	
     mov		cr3, eax
     mov		eax, cr0

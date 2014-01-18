@@ -2,6 +2,7 @@
 #include "stdlib.h"
 #include "isr.h"
 #include "irq.h"
+#include "syscall.h"
 
 extern void FASTCALL idtFlush(t_idtdesc *pDesc);
 extern void FASTCALL RemapPIC(uint8_t btOffset1, uint8_t btOffset2);
@@ -19,8 +20,6 @@ t_idtdesc       *idtGetDescriptor(void)
 
   return &desc;
 }
-
-extern void _asm_irq_0(void);
 
 void          idtInitialize(void)
 {
@@ -78,7 +77,8 @@ void          idtInitialize(void)
   idtSetEntry(&pEntries[44], (uint32_t) &_irq12, 0x08, IDT_INT_GATE);
   idtSetEntry(&pEntries[45], (uint32_t) &_irq13, 0x08, IDT_INT_GATE);
   idtSetEntry(&pEntries[46], (uint32_t) &_irq14, 0x08, IDT_INT_GATE);
-  idtSetEntry(&pEntries[47], (uint32_t) &_irq15, 0x08, IDT_INT_GATE);
+
+  idtSetEntry(&pEntries[128], (uint32_t) &KiSysCallHandler, 0x08, IDT_INT_GATE);
 
   irqInitialize();
 

@@ -17,10 +17,23 @@ t_gdtdesc	*gdtGetDescriptor(void)
   return &desc;
 }
 
+t_tss	*tssGetDescriptor(void)
+{
+  static t_tss	tss;
+
+  return &tss;
+}
+
 void		gdtInitialize(void)
 {
   t_gdtdesc	*pDesc = gdtGetDescriptor();
   t_gdtentry	*pEntries = gdtGetEntries();
+  t_tss		*ptss = tssGetDescriptor();
+
+
+  memset(ptss, 0, sizeof(t_tss));
+  ptss->ss0 = 0x18;
+  ptss->esp0 = 0x2000;
 
   gdtSetEntry(&pEntries[0], 0, 0, 0);
 
@@ -32,12 +45,16 @@ void		gdtInitialize(void)
   gdtSetEntry(&pEntries[5], 0, 0x000FFFFF, GDT_DATA_PL3); // user data
   gdtSetEntry(&pEntries[6], 0, 0, GDT_STACK_PL3); // user stack
 
+  gdtSetEntry(&pEntries[7], ptss, sizeof(t_tss), GDT_TSS);
+
   pDesc->limit = GDT_ENTRY_COUNT * sizeof(t_gdtentry);
-  pDesc->base = (uint32_t) GDT_BASE_ADDR;
-  //pDesc->base = (uint32_t) pEntries;
-  memcpy((void*) pDesc->base, pEntries, pDesc->limit);
+  pDesc->base = (uint32_t) pEntries;
 
   gdtFlush(pDesc);
+  /*
+  asm volatile("mov	ax, 0x43");
+  asm volatile("ltr	ax");
+  */
 }
 
 void		gdtSetEntry(t_gdtentry *pentry, uint32_t base, uint32_t limit, uint16_t flags)

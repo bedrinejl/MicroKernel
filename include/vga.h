@@ -5,7 +5,7 @@
 #include <stdint.h>
 #include "stdlib.h"
 
-#define VGA_BUFFER_BASE_MODE ((uint16_t*) 0xc00B8000)
+#define VGA_BUFFER_BASE_MODE ((uint16_t*) 0x000B8000)
 #define VGA_BUFFER_MODE (0xB8000 + 160)
 #define MICRO_CHAR 6
 

@@ -5,11 +5,8 @@
 #include <stdint.h>
 #include "kernel.h"
 
-#define GDT_BASE_ADDR	(0xc0000800)
+#define GDT_BASE_ADDR	(0xC0000800)
 #define GDT_ENTRY_COUNT	(255)
-
-#define GDT_ENTRY_ACCESS_PRESENT_BIT	(0x80)
-#define GDT_ENTRY_ACCESS
 
 #define SEG_DESCTYPE(x)  ((x) << 0x04) // Descriptor type (0 for system, 1 for code/data)
 #define SEG_PRES(x)      ((x) << 0x07) // Present
@@ -60,6 +57,8 @@
                       SEG_LONG(0)     | SEG_SIZE(1) | SEG_GRAN(1) | \
                       SEG_PRIV(3)     | SEG_DATA_RDWREXPDA
 
+#define GDT_TSS	SEG_PRES(1) | SEG_CODE_EXA
+
 struct	s_gdtentry
 {
   uint16_t	limit_low;	// 0 .. 15
@@ -79,8 +78,30 @@ struct	s_gdtdesc
 }__attribute__((packed));
 typedef struct s_gdtdesc t_gdtdesc;
 
+struct s_tss
+{
+  uint16_t    previous_task, __previous_task_unused;
+  uint32_t    esp0;
+  uint16_t    ss0, __ss0_unused;
+  uint32_t    esp1;
+  uint16_t    ss1, __ss1_unused;
+  uint32_t    esp2;
+  uint16_t    ss2, __ss2_unused;
+  uint32_t    cr3;
+  uint32_t    eip, eflags, eax, ecx, edx, ebx, esp, ebp, esi, edi;
+  uint16_t    es, __es_unused;
+  uint16_t    cs, __cs_unused;
+  uint16_t    ss, __ss_unused;
+  uint16_t    ds, __ds_unused;
+  uint16_t    fs, __fs_unused;
+  uint16_t    gs, __gs_unused;
+  uint16_t    ldt_selector, __ldt_sel_unused;
+  uint16_t    Debug_flag, io_map;
+}__attribute__((packed));
+typedef struct s_tss t_tss;
+
 t_gdtentry	*gdtGetEntries(void);
-void		gdtInitialize(void);
+void		Gdtinitialize(void);
 void		gdtSetEntry(t_gdtentry *pgdtEntry, uint32_t base, uint32_t limit, uint16_t flags);
 
 #endif
