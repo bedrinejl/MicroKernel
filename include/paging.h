@@ -1,8 +1,9 @@
 #ifndef _PAGING_H
 #define _PAGING_H
 
+#include <sys/types.h>
 #include <stddef.h>
-#include <stdint.h>
+
 #include "kernel.h"
 
 /*
@@ -38,4 +39,4 @@ typedef struct s_kernel_page_table t_kernel_page_table;
 
 void InitializePaging(void);
 
-#endif 
+#endif

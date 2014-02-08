@@ -42,7 +42,7 @@ void		STDCALL InterruptRequestCHandler(t_context *pctx)
 static uint32_t    	irqClockHandler(t_context *pctx)
 {
   UNUSED(pctx);
-  printf("clock\n");
+  //printf("clock\n");
   return 0;
 }
 

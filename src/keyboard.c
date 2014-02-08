@@ -1,4 +1,6 @@
-#include <stdint.h>
+#include <sys/types.h>
+#include <stddef.h>
+
 #include "kernel.h"
 #include "keyboard.h"
 
@@ -211,7 +213,7 @@ static uint8_t *ppKeyboardLayout[] = {
 
 uint32_t GetVirtualKey(void)
 {
-  static uint32_t dwFlags; 
+  static uint32_t dwFlags;
   static bool bEscaped;
   uint32_t vk = 0;
   uint8_t sc, c;

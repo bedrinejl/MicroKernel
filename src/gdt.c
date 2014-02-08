@@ -1,3 +1,7 @@
+#include <sys/types.h>
+#include <stddef.h>
+#include <string.h>
+
 #include "gdt.h"
 #include "stdlib.h"
 
@@ -45,7 +49,7 @@ void		gdtInitialize(void)
   gdtSetEntry(&pEntries[5], 0, 0x000FFFFF, GDT_DATA_PL3); // user data
   gdtSetEntry(&pEntries[6], 0, 0, GDT_STACK_PL3); // user stack
 
-  gdtSetEntry(&pEntries[7], ptss, sizeof(t_tss), GDT_TSS);
+  gdtSetEntry(&pEntries[7], (uint32_t) ptss, sizeof(t_tss), GDT_TSS);
 
   pDesc->limit = GDT_ENTRY_COUNT * sizeof(t_gdtentry);
   pDesc->base = (uint32_t) pEntries;

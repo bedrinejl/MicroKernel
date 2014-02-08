@@ -1,3 +1,5 @@
+#include <string.h>
+
 #include "vga.h"
 #include "stdlib.h"
 
@@ -5,7 +7,7 @@ void setBackground(vga_terminal *pterm)
 {
   uint32_t idx;
   uint16_t c;
-  
+
   pterm->terminal_color = MAKE_COLOR(COLOR_WHITE, COLOR_BLUE);
   c = MAKE_VGAENTRY(' ', MAKE_COLOR(COLOR_BLUE, COLOR_BLUE));
   idx = ((VGA_HEIGHT + 1) * VGA_WIDTH);
@@ -24,7 +26,7 @@ void printTitle(vga_terminal *pterm)
 
   pterm->terminal_column = x;
   pterm->terminal_row = y;
-  
+
   printkc(color, 6);
   printk(color, title);
   printk(0, "\n");
@@ -32,29 +34,33 @@ void printTitle(vga_terminal *pterm)
 
 void printMessage(vga_terminal *pterm, uint32_t uiNumber, char *pszError, uint32_t uiAddr)
 {
+	(void) uiNumber;
+	(void) pszError;
+	(void) uiAddr;
+
   int x = (VGA_WIDTH / 6);
 
   pterm->terminal_column = x;
-  printf("A fatal exception %i (%s)\n", uiNumber, pszError);
+  //printf("A fatal exception %i (%s)\n", uiNumber, pszError);
   pterm->terminal_column = x;
-  printf("has occured at %p\n\n", uiAddr);
+  //printf("has occured at %p\n\n", uiAddr);
   pterm->terminal_column = x;
-  printf("the current application will be terminated.\n\n");
+  //printf("the current application will be terminated.\n\n");
   pterm->terminal_column = x;
-  printf("* Press any key to terminate the current application.\n");
+  //printf("* Press any key to terminate the current application.\n");
   pterm->terminal_column = x;
-  printf("* Press CTRL+ALT+DEL to restart your computer.\n");
+  //printf("* Press CTRL+ALT+DEL to restart your computer.\n");
   pterm->terminal_column = x;
-  printf("  You will lose all unsaved information in all applications.\n");
+  //printf("  You will lose all unsaved information in all applications.\n");
 }
 
 void printPressAnyKey(vga_terminal *pterm)
 {
   int x = (VGA_WIDTH / 2) - (strlen("Press any key to continue") / 2);
 
-  printf("\n");
+  //printf("\n");
   pterm->terminal_column = x;
-  printf("Press any key to continue\n");
+  //printf("Press any key to continue\n");
 }
 
 void     terminalBlueScreenOfDeath(uint32_t uiNumber, char *pszError, uint32_t uiAddr)
