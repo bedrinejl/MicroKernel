@@ -1,4 +1,4 @@
-CC	= gcc
+CC	= i586-elf-gcc
 AS	= as
 AR	= ar
 LD 	= ld
