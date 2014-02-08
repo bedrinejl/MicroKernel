@@ -18,11 +18,12 @@ void kmain()
   vga_terminal *pterm;
 
   int i;
+  (void) i;
 
   InitializePaging();
   gdtInitialize();
   idtInitialize();
-  pterm = get_terminal_instance(); 
+  pterm = get_terminal_instance();
   terminal_initialize(pterm);
   /*
     memcpy(0x13000, &userTask, 100);
@@ -46,7 +47,7 @@ void kmain()
   */
 
   asm volatile ("sti");
-  
+
   //printf("%i\n", 5 /0);
 
   //  asm volatile ("int 5");

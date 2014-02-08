@@ -1,8 +1,9 @@
 #ifndef _GDT_H
 #define _GDT_H
 
+#include <sys/types.h>
 #include <stddef.h>
-#include <stdint.h>
+
 #include "kernel.h"
 
 #define GDT_BASE_ADDR	(0xC0000800)
@@ -15,7 +16,7 @@
 #define SEG_SIZE(x)      ((x) << 0x0E) // Size (0 for 16-bit, 1 for 32)
 #define SEG_GRAN(x)      ((x) << 0x0F) // Granularity (0 for 1B - 1MB, 1 for 4KB - 4GB)
 #define SEG_PRIV(x)     (((x) &  0x03) << 0x05)   // Set privilege level (0 - 3)
- 
+
 #define SEG_DATA_RD        0x00 // Read-Only
 #define SEG_DATA_RDA       0x01 // Read-Only, accessed
 #define SEG_DATA_RDWR      0x02 // Read/Write
@@ -32,11 +33,11 @@
 #define SEG_CODE_EXCA      0x0D // Execute-Only, conforming, accessed
 #define SEG_CODE_EXRDC     0x0E // Execute/Read, conforming
 #define SEG_CODE_EXRDCA    0x0F // Execute/Read, conforming, accessed
- 
+
 #define GDT_CODE_PL0 SEG_DESCTYPE(1) | SEG_PRES(1) | SEG_SAVL(0) | \
                      SEG_LONG(0)     | SEG_SIZE(1) | SEG_GRAN(1) | \
                      SEG_PRIV(0)     | SEG_CODE_EXRD
- 
+
 #define GDT_DATA_PL0 SEG_DESCTYPE(1) | SEG_PRES(1) | SEG_SAVL(0) | \
                      SEG_LONG(0)     | SEG_SIZE(1) | SEG_GRAN(1) | \
                      SEG_PRIV(0)     | SEG_DATA_RDWR
@@ -44,11 +45,11 @@
 #define GDT_STACK_PL0 SEG_DESCTYPE(1) | SEG_PRES(1) | SEG_SAVL(0) | \
                       SEG_LONG(0)     | SEG_SIZE(1) | SEG_GRAN(1) | \
                       SEG_PRIV(0)     | SEG_DATA_RDWREXPDA
- 
+
 #define GDT_CODE_PL3 SEG_DESCTYPE(1) | SEG_PRES(1) | SEG_SAVL(0) | \
                      SEG_LONG(0)     | SEG_SIZE(1) | SEG_GRAN(1) | \
                      SEG_PRIV(3)     | SEG_CODE_EXRD
- 
+
 #define GDT_DATA_PL3 SEG_DESCTYPE(1) | SEG_PRES(1) | SEG_SAVL(0) | \
                      SEG_LONG(0)     | SEG_SIZE(1) | SEG_GRAN(1) | \
                      SEG_PRIV(3)     | SEG_DATA_RDWR
@@ -66,7 +67,7 @@ struct	s_gdtentry
   uint8_t	base_middle;	// 16 .. 23
   uint8_t	access;
   uint8_t	limit_high:4;	// 16 .. 19
-  uint8_t	flags:4;	// 
+  uint8_t	flags:4;	//
   uint8_t	base_high;	// 24 .. 31
 }__attribute__((packed));
 typedef struct s_gdtentry t_gdtentry;
@@ -101,7 +102,7 @@ struct s_tss
 typedef struct s_tss t_tss;
 
 t_gdtentry	*gdtGetEntries(void);
-void		Gdtinitialize(void);
+void		gdtInitialize(void);
 void		gdtSetEntry(t_gdtentry *pgdtEntry, uint32_t base, uint32_t limit, uint16_t flags);
 
 #endif

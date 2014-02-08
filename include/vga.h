@@ -1,9 +1,9 @@
 #ifndef VGA_H
 #define VGA_H
 
+#include <sys/types.h>
 #include <stddef.h>
-#include <stdint.h>
-#include "stdlib.h"
+#include <stdlib.h>
 
 #define VGA_BUFFER_BASE_MODE ((uint16_t*) 0x000B8000)
 #define VGA_BUFFER_MODE (0xB8000 + 160)

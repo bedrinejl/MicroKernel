@@ -1,4 +1,6 @@
-#include <stdint.h>
+#include <sys/types.h>
+#include <stddef.h>
+
 #include "kernel.h"
 #include "isr.h"
 #include "syscall.h"
@@ -16,5 +18,6 @@ void STDCALL KiSysCallHandler(t_context *pCtx)
 
 void TestSyscall(int iParam1, char *pParam2)
 {
-
+	(void) iParam1;
+	(void) pParam2;
 }

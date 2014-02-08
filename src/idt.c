@@ -1,5 +1,7 @@
+#include <stdlib.h>
+#include <string.h>
+
 #include "idt.h"
-#include "stdlib.h"
 #include "isr.h"
 #include "irq.h"
 #include "syscall.h"

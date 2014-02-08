@@ -1,3 +1,5 @@
+#include <string.h>
+
 #include "vga.h"
 #include "keyboard.h"
 
@@ -22,7 +24,7 @@ void terminal_clear_buffer(vga_terminal *pterm)
 {
   uint32_t i;
   uint16_t c;
-  
+
   i = (VGA_HEIGHT * VGA_WIDTH);
   c = MAKE_VGAENTRY(0, pterm->terminal_color);
   while (i--)
@@ -62,7 +64,7 @@ void terminal_putchar_with_color(vga_terminal *pterm, uint32_t c)
 
     case VK_BACKSPACE:
       if (pterm->terminal_column)
-	pterm->terminal_column--;      
+	pterm->terminal_column--;
       else if (pterm->terminal_row)
 	{
 	  pterm->terminal_row--;
@@ -140,7 +142,7 @@ void scrollup(vga_terminal *pterm, uint8_t n)
   for (video = (uint8_t *) pterm->terminal_buffer; video < maxAddr; video += 2)
     {
       tmp = (uint8_t *) (video + n * 160);
-      
+
       if (tmp < maxAddr)
 	{
 	  *video = *tmp;
