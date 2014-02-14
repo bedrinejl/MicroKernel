@@ -6,6 +6,7 @@
 #include "stdlib.h"
 
 extern void FASTCALL gdtFlush(t_gdtdesc *pdesc);
+extern void FASTCALL gdtSetTssEntry(uint32_t uiGdtIndex);
 
 t_gdtentry	*gdtGetEntries(void)
 {
@@ -55,12 +56,7 @@ void		gdtInitialize(void)
   pDesc->base = (uint32_t) pEntries;
 
   gdtFlush(pDesc);
-  asm volatile("mov	ax, 0x7 << 0x3\n" //Entry 7 (tss) shifted 3
-	       "ltr	ax\n"		  //
-		:
-		:
-		: "eax"
-  );
+  gdtSetTssEntry(7);
 }
 
 void		gdtSetEntry(t_gdtentry *pentry, uint32_t base, uint32_t limit, uint16_t flags)

@@ -6,6 +6,7 @@ EXTERN InterruptServiceRoutineCHandler
 GLOBAL _start
 GLOBAL gdtFlush
 GLOBAL idtFlush
+GLOBAL gdtSetTssEntry
 GLOBAL EnablePaging
 GLOBAL InterruptServiceRoutineDefaultHandler
 
