@@ -55,10 +55,12 @@ void		gdtInitialize(void)
   pDesc->base = (uint32_t) pEntries;
 
   gdtFlush(pDesc);
-  /*
-  asm volatile("mov	ax, 0x43");
-  asm volatile("ltr	ax");
-  */
+  asm volatile("mov	ax, 0x7 << 0x3\n" //Entry 7 (tss) shifted 3
+	       "ltr	ax\n"		  //
+		:
+		:
+		: "eax"
+  );
 }
 
 void		gdtSetEntry(t_gdtentry *pentry, uint32_t base, uint32_t limit, uint16_t flags)

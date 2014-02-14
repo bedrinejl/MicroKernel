@@ -51,14 +51,14 @@ LIBC = ./libc/mikro_libc_no_mman_no_start.a
 #Flags
 AFLAGS	=	-f elf32
 CFLAGS	=	$(NOLIBC) $(NOINSTR) $(OPTI) $(NAZI) $(STD) $(OTHER) $(INCLUDE)
-LDFLAGS	=	-T $(LDFILE) $(LIBC) -nostdlib #-nodefaultlib -lgcc
+LDFLAGS	=	-T $(LDFILE) -nostdlib #-nodefaultlib -lgcc
 
 #Rules
 all: $(NAME)
 
 $(NAME): $(OBJ) linker.ld
 	make -C libc
-	$(LD) $(LDFLAGS) $(OBJ) -o $@
+	$(LD) $(LDFLAGS) $(OBJ) $(LIBC) -o $@
 
 %.o: %.c
 	$(CC) $(CFLAGS) -o $@ -c $<
