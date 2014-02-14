@@ -38,5 +38,23 @@ struct s_kernel_page_table
 typedef struct s_kernel_page_table t_kernel_page_table;
 
 void InitializePaging(void);
+/*
+#define MEM_COMMIT		(0x1000)
+#define MEM_RESERVE		(0x2000)
+#define MEM_DECOMMIT		(0x4000)
+#define MEM_RELEASE		(0x8000)
+
+#define PAGE_NOACCESS		(0x01)
+#define PAGE_READONLY		(0x02)
+#define PAGE_READWRITE		(0x04)
+#define PAGE_WRITECOPY		(0x08)
+#define PAGE_EXECUTE		(0x10)
+#define PAGE_EXECUTE_READ	(0x20)
+#define PAGE_EXECUTE_READWRITE	(0x40)
+
+
+void	*MmVirtualAlloc(t_process *pProcess, void *lpAddress, uint32_t dwSize, uint32_t flAllocationType, uint32_t flProtect);
+bool	MmVirtualFree(t_process *pProcess, void *lpAddress, uint32_t dwSize, uint32_t dwFreeType);
+*/
 
 #endif

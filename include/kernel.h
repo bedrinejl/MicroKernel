@@ -12,9 +12,8 @@
 #define SIZEOFARRAY(x) (sizeof(x) / sizeof(*(x)))
 
 typedef int bool;
-
-#define FALSE	((bool) 0)
 #define TRUE	(!FALSE)
+#define FALSE	((bool) 0)
 
 #define UNUSED(x) ((void) (x))
 

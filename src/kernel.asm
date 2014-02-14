@@ -17,7 +17,7 @@ MULTIBOOT_HEADER_FLAGS		equ MULTIBOOT_PAGE_ALIGN | MULTIBOOT_MEMORY_INFO
 MULTIBOOT_CHECKSUM		equ -(MULTIBOOT_HEADER_MAGIC + MULTIBOOT_HEADER_FLAGS)
 MULTIBOOT_BOOTLOADER_MAGIC	equ 2BADB002h
 
-KERNEL_STACK_SIZE		equ 4096
+KERNEL_STACK_SIZE		equ 10000h ; 64kb
 
 SECTION .ldr
 
@@ -72,6 +72,15 @@ gdtFlush:
 .flush:
     ret
 
+; VOID __fastcall gdtSetTssEntry(uint32_t uiGdtIndex)
+gdtSetTssEntry:
+; ecx = uiGdtIndex
+    xchg	ecx, eax
+    shl		eax, 3
+    ltr		ax
+    xchg	ecx, eax
+    ret
+	
 ; VOID __fastcall idtFlush(t_idtdesc *pDesc)
 idtFlush:
     lidt	[ecx] ; pDesc
