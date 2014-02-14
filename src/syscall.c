@@ -23,10 +23,9 @@ void TestSyscall(int iParam1, char *pParam2)
 {
 	(void) iParam1;
 	(void) pParam2;
-
+ /*
   if (pCtx->eax < SIZEOFARRAY(pSysCall))
     pCtx->uiErrCode = pSysCall[pCtx->eax]();
-  /*
     else
     ERROR !!
   */
