@@ -1,9 +1,6 @@
-#include <sys/types.h>
-#include <stddef.h>
-
 #include "paging.h"
 
-extern void __attribute__((fastcall)) EnablePaging(uint32_t *pageDir); // cf kernel.asm
+extern void FASTCALL EnablePaging(uint32_t *pageDir); // cf kernel.asm
 
 uint32_t	*GetKernelPageDirectory(void)
 {

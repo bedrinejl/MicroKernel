@@ -1,9 +1,6 @@
 #ifndef _IDT_H
 #define _IDT_H
 
-#include <sys/types.h>
-#include <stddef.h>
-
 #include "kernel.h"
 
 #define IDT_BASE_ADDR   (0x00000000)

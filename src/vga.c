@@ -1,7 +1,6 @@
-#include <string.h>
-
 #include "vga.h"
 #include "keyboard.h"
+#include "klibc.h"
 
 vga_terminal *get_terminal_instance()
 {
@@ -40,20 +39,21 @@ void terminal_initialize_with_color(vga_terminal *pterm, vga_color fg, vga_color
   terminal_clear_buffer(pterm);
 }
 
-void terminal_put_vgaentry_at(vga_terminal *pterm, uint32_t c, vga_color color, size_t x, size_t y)
+int	terminal_put_vgaentry_at(vga_terminal *pterm, uint32_t c, vga_color color, size_t x, size_t y)
 {
   if (c == MICRO_CHAR)
     c = 0xE6;
 
   pterm->terminal_buffer[y * VGA_WIDTH + x] = MAKE_VGAENTRY(c, color);
+  return 1;
 }
 
-void terminal_putchar(vga_terminal *pterm, uint32_t c)
+int terminal_putchar(vga_terminal *pterm, uint32_t c)
 {
-  terminal_putchar_with_color(pterm, c);
+  return terminal_putchar_with_color(pterm, c);
 }
 
-void terminal_putchar_with_color(vga_terminal *pterm, uint32_t c)
+int terminal_putchar_with_color(vga_terminal *pterm, uint32_t c)
 {
   switch (c)
     {
@@ -94,6 +94,7 @@ void terminal_putchar_with_color(vga_terminal *pterm, uint32_t c)
     scrollup(pterm, 1);
 
   terminal_show_cursor(pterm);
+  return 1;
 }
 
 void terminal_show_cursor(vga_terminal *pterm)
@@ -101,16 +102,27 @@ void terminal_show_cursor(vga_terminal *pterm)
   SetCursorPos(pterm->terminal_column, pterm->terminal_row + 1);
 }
 
-void terminal_putstr_with_color(vga_terminal *pterm, const char* data)
+int terminal_putstr_with_color(vga_terminal *pterm, const char* data)
 {
-  size_t datalen = strlen(data);
+  size_t datalen = kstrlen(data);
+
   for (size_t i = 0; i < datalen; i++)
     terminal_putchar_with_color(pterm, data[i]);
+  return datalen;
 }
 
-void terminal_putstr(vga_terminal *pterm, const char* data)
+int terminal_putstr(vga_terminal *pterm, const char* data)
 {
-  terminal_putstr_with_color(pterm, data);
+  return terminal_putstr_with_color(pterm, data);
+}
+
+int terminal_putstrn(vga_terminal *pterm, const char* data, int n)
+{
+  char	*psz = (char*) data;
+
+  while (*psz && n--)
+    terminal_putchar_with_color(pterm, *psz++);
+  return (--psz - data);
 }
 
 void printkc(int color, char c) {
@@ -174,9 +186,9 @@ void printTaskBar(vga_terminal *pterm)
   printkc(title_color, 6);
   printk(title_color, title);
   printkc(bar_color_b, '[');
-  for(int i = 0; i < (int) (VGA_WIDTH - (strlen(title) + 3)); i += 2) {
+  for(int i = 0; i < (int) (VGA_WIDTH - (kstrlen(title) + 3)); i += 2) {
     printkc(bar_color_a, '=');
-    if ((i + 1) < (int) (VGA_WIDTH - (strlen(title) + 3)))
+    if ((i + 1) < (int) (VGA_WIDTH - (kstrlen(title) + 3)))
       printkc(bar_color_b, '=');
   }
   printkc(bar_color_b, ']');

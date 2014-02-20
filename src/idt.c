@@ -1,10 +1,9 @@
-#include <stdlib.h>
-#include <string.h>
-
 #include "idt.h"
 #include "isr.h"
 #include "irq.h"
 #include "syscall.h"
+#include "klibc.h"
+
 
 extern void FASTCALL idtFlush(t_idtdesc *pDesc);
 extern void FASTCALL RemapPIC(uint8_t btOffset1, uint8_t btOffset2);
@@ -84,12 +83,12 @@ void          idtInitialize(void)
 
   irqInitialize();
 
-  memset(&pEntries[48], 0, (IDT_ENTRY_COUNT - 48) * sizeof(t_idtentry));
+  kmemset(&pEntries[48], 0, (IDT_ENTRY_COUNT - 48) * sizeof(t_idtentry));
 
   pDesc->limit = IDT_ENTRY_COUNT * sizeof(t_idtentry);
   pDesc->base = (uint32_t) IDT_BASE_ADDR;
 
-  memcpy((void*) pDesc->base, pEntries, pDesc->limit);
+  kmemcpy((void*) pDesc->base, pEntries, pDesc->limit);
 
   idtFlush(pDesc);
 }

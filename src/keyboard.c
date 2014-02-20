@@ -1,6 +1,3 @@
-#include <sys/types.h>
-#include <stddef.h>
-
 #include "kernel.h"
 #include "keyboard.h"
 

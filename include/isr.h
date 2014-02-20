@@ -1,9 +1,6 @@
 #ifndef _ISR_H
 #define _ISR_H
 
-#include <sys/types.h>
-#include <stddef.h>
-
 #include "kernel.h"
 
 typedef struct s_context

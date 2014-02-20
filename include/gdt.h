@@ -1,9 +1,6 @@
 #ifndef _GDT_H
 #define _GDT_H
 
-#include <sys/types.h>
-#include <stddef.h>
-
 #include "kernel.h"
 
 #define GDT_BASE_ADDR	(0xC0000800)

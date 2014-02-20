@@ -1,7 +1,5 @@
-#include <string.h>
-
 #include "vga.h"
-#include "stdlib.h"
+#include "klibc.h"
 
 void setBackground(vga_terminal *pterm)
 {
@@ -20,7 +18,7 @@ void setBackground(vga_terminal *pterm)
 void printTitle(vga_terminal *pterm)
 {
   char title[] = "Kernel";
-  int x = (VGA_WIDTH / 2) - (strlen(title + 1) / 2);
+  int x = (VGA_WIDTH / 2) - (kstrlen(title + 1) / 2);
   int y = (VGA_HEIGHT / 4);
   vga_color color = MAKE_COLOR(COLOR_BLUE, COLOR_WHITE);
 
@@ -41,22 +39,22 @@ void printMessage(vga_terminal *pterm, uint32_t uiNumber, char *pszError, uint32
   int x = (VGA_WIDTH / 6);
 
   pterm->terminal_column = x;
-  //printf("A fatal exception %i (%s)\n", uiNumber, pszError);
+  kprintf("A fatal exception %i (%s)\n", uiNumber, pszError);
   pterm->terminal_column = x;
-  //printf("has occured at %p\n\n", uiAddr);
+  kprintf("has occured at %p\n\n", uiAddr);
   pterm->terminal_column = x;
-  //printf("the current application will be terminated.\n\n");
+  kprintf("the current application will be terminated.\n\n");
   pterm->terminal_column = x;
-  //printf("* Press any key to terminate the current application.\n");
+  kprintf("* Press any key to terminate the current application.\n");
   pterm->terminal_column = x;
-  //printf("* Press CTRL+ALT+DEL to restart your computer.\n");
+  kprintf("* Press CTRL+ALT+DEL to restart your computer.\n");
   pterm->terminal_column = x;
-  //printf("  You will lose all unsaved information in all applications.\n");
+  kprintf("  You will lose all unsaved information in all applications.\n");
 }
 
 void printPressAnyKey(vga_terminal *pterm)
 {
-  int x = (VGA_WIDTH / 2) - (strlen("Press any key to continue") / 2);
+  int x = (VGA_WIDTH / 2) - (kstrlen("Press any key to continue") / 2);
 
   //printf("\n");
   pterm->terminal_column = x;

@@ -1,9 +1,7 @@
 #ifndef VGA_H
 #define VGA_H
 
-#include <sys/types.h>
-#include <stddef.h>
-#include <stdlib.h>
+#include "kernel.h"
 
 #define VGA_BUFFER_BASE_MODE ((uint16_t*) 0x000B8000)
 #define VGA_BUFFER_MODE (0xB8000 + 160)
@@ -51,11 +49,12 @@ void     terminal_clear_buffer(vga_terminal *pterm);
 void     terminal_initialize(vga_terminal *pterm);
 void     terminal_initialize_with_color(vga_terminal *pterm, vga_color fg, vga_color bg);
 void     terminal_setcolor(vga_terminal *pterm, vga_color fg, vga_color bg);
-void     terminal_put_vgaentry_at(vga_terminal *pterm, uint32_t c, vga_color color, size_t x, size_t y);
-void     terminal_putchar(vga_terminal *pterm, uint32_t c);
-void     terminal_putchar_with_color(vga_terminal *pterm, uint32_t c);
-void     terminal_putstr(vga_terminal *pterm, const char *str);
-void     terminal_putstr_with_color(vga_terminal *pterm, const char *str);
+int     terminal_put_vgaentry_at(vga_terminal *pterm, uint32_t c, vga_color color, size_t x, size_t y);
+int     terminal_putchar(vga_terminal *pterm, uint32_t c);
+int     terminal_putchar_with_color(vga_terminal *pterm, uint32_t c);
+int     terminal_putstr(vga_terminal *pterm, const char *str);
+int	terminal_putstrn(vga_terminal *pterm, const char* data, int n);
+int     terminal_putstr_with_color(vga_terminal *pterm, const char *str);
 void     printk(int color, char *str);
 void     printkc(int color, char c);
 void     scrollup(vga_terminal *pterm, uint8_t n);

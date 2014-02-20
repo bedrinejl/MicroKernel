@@ -1,9 +1,6 @@
 #ifndef _PAGING_H
 #define _PAGING_H
 
-#include <sys/types.h>
-#include <stddef.h>
-
 #include "kernel.h"
 
 /*

@@ -1,7 +1,6 @@
 #include "irq.h"
 #include "keyboard.h"
 #include "vga.h"
-#include "stdlib.h"
 
 static handler_t pirqHandlers[MAX_IRQ_HANDLERS] = {0};
 

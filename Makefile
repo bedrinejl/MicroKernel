@@ -33,7 +33,7 @@ LD	=	$(CC)
 RM	=	rm -f
 
 #Include
-INCLUDE = -I include -I libc/include
+INCLUDE = -I include -I libc/include -I klibc/include
 
 #Linker file
 LDFILE = linker.ld
@@ -46,7 +46,7 @@ NAZI = -Wall -Wextra
 STD = -masm=intel -std=gnu99
 OTHER = -ffreestanding -nostartfiles -m32
 
-LIBC = ./libc/mikro_libc_no_mman_no_start.a
+LIBC = ./klibc/klibc.a
 
 #Flags
 AFLAGS	=	-f elf32
@@ -58,6 +58,7 @@ all: $(NAME)
 
 $(NAME): $(OBJ) linker.ld
 	make -C libc
+	make -C klibc
 	$(LD) $(LDFLAGS) $(OBJ) $(LIBC) -o $@
 
 %.o: %.c
@@ -72,6 +73,7 @@ clean:
 	rm -f /tmp/bochs.log
 	rm -f $(NAME) $(ISO) $(OBJ)
 	make -C libc clean
+	make -C klibc clean
 
 iso: $(ISO)
 
